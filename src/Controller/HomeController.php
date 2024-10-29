@@ -11,10 +11,10 @@ class HomeController extends AbstractController
     public function __construct(protected string $mercurePublicUrl) {
     }
 
-    #[Route('/home', name: 'home')]
+    #[Route('/', name: 'home')]
     public function index(): Response
     {
-        return $this->render('base.html.twig', [
+        return $this->render('home/home.html.twig', [
             'mercure_url' => $this->mercurePublicUrl,
         ]);
     }

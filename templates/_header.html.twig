@@ -1,0 +1,24 @@
+<header class="bg-blue-600 text-white p-4 flex">
+    <div class="container mx-auto">
+        <div>
+            <h1>
+                <a href="{{ path('home') }}">DuelistDepot</a>
+            </h1>
+            <nav>
+                <ul>
+                    {# <li><a href="{{ path('browse') }}">Browse all</a></li>
+                    <li><a href="{{ path('cards') }}">Cards</a></li>
+                    <li><a href="{{ path('boosters') }}">Boosters</a></li>
+                    <li><a href="{{ path('accessories') }}">Accessories</a></li> #}
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <div>
+        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+            <a href="{{ path('logout') }}">Logout</a>
+        {% else %}
+            <a href="{{ path('login') }}">Login</a>
+        {% endif %}
+    </div>
+</header>

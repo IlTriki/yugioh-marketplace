@@ -4,4 +4,7 @@ services:
   mercure:
     ports:
       - "80"
+  db:
+    ports:
+      - "3307:3306"
 ###< symfony/mercure-bundle ###
