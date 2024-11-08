@@ -12,7 +12,7 @@
             {% block importmap %}{{ importmap('app') }}{% endblock %}
         {% endblock %}
     </head>
-    <body {{ stimulus_controller('app') }} data-app-mercure="{{ mercure('log_debug') }}" class="bg-gray-100 text-gray-900 flex flex-col justify-between h-dvh">
+    <body {{ stimulus_controller('app') }} data-app-mercure="{{ mercure('log_debug') }}" class="text-white flex flex-col justify-between min-h-screen">
 
         {% include '_header.html.twig' %}
         <main class="container mx-auto p-4">

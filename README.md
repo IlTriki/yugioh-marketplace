@@ -45,6 +45,7 @@ Linux (Uniquement pour les utilisateurs de Linux pas pour WSL) :
 5. Pour accéder à l'application `docker exec -it symfony_php bash` puis `composer install`
 6. Toutes les commandes Symfony sont à lancer dans le container PHP
 7. Vous pouvez accéder à l'application sur `localhost:8081` dans votre navigateur (si vous avez un autre service qui tourne sur le port 8081, vous pouvez changer le port dans le fichier `docker-compose.yml`)
+8. Pour utiliser tailwind et recompiler le css à chaque changement au css `php bin/console tailwind:build --watch --poll`
 
 ## Utilisation
 

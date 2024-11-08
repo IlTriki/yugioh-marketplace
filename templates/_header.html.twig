@@ -1,24 +1,24 @@
-<header class="bg-blue-600 text-white p-4 flex">
+<header class="text-indigo-600 p-4 flex content-start">
     <div class="container mx-auto">
-        <div>
+        <div class="flex">
             <h1>
-                <a href="{{ path('home') }}">DuelistDepot</a>
+                <a href="{{ path('home') }}" class="text-2xl">DuelistDepot</a>
             </h1>
             <nav>
-                <ul>
-                    {# <li><a href="{{ path('browse') }}">Browse all</a></li>
-                    <li><a href="{{ path('cards') }}">Cards</a></li>
-                    <li><a href="{{ path('boosters') }}">Boosters</a></li>
-                    <li><a href="{{ path('accessories') }}">Accessories</a></li> #}
+                <ul class="flex">
+                    <li><a href="{{ path('browse') }}" class="relative w-fit block after:block after:content-[''] after:absolute after:h-[2px] after:bg-indigo-600 after:w-full after:scale-x-0 after:hover:scale-x-100 after:transition after:duration-300 after:origin-center">Browse all</a></li>
+                    <li><a href="{{ path('cards') }}" class="relative w-fit block after:block after:content-[''] after:absolute after:h-[2px] after:bg-indigo-600 after:w-full after:scale-x-0 after:hover:scale-x-100 after:transition after:duration-300 after:origin-center">Cards</a></li>
+                    <li><a href="{{ path('boosters') }}" class="relative w-fit block after:block after:content-[''] after:absolute after:h-[2px] after:bg-indigo-600 after:w-full after:scale-x-0 after:hover:scale-x-100 after:transition after:duration-300 after:origin-center">Boosters</a></li>
+                    <li><a href="{{ path('accessories') }}" class="relative w-fit block after:block after:content-[''] after:absolute after:h-[2px] after:bg-indigo-600 after:w-full after:scale-x-0 after:hover:scale-x-100 after:transition after:duration-300 after:origin-center">Accessories</a></li>
                 </ul>
             </nav>
         </div>
     </div>
     <div>
         {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-            <a href="{{ path('logout') }}">Logout</a>
+            <a href="{{ path('logout') }}" class="relative w-fit block after:block after:content-[''] after:absolute after:h-[2px] after:bg-indigo-600 after:w-full after:scale-x-0 after:hover:scale-x-100 after:transition after:duration-300 after:origin-center">Logout</a>
         {% else %}
-            <a href="{{ path('login') }}">Login</a>
+            <a href="{{ path('login') }}" class="relative w-fit block after:block after:content-[''] after:absolute after:h-[2px] after:bg-indigo-600 after:w-full after:scale-x-0 after:hover:scale-x-100 after:transition after:duration-300 after:origin-center">Login</a>
         {% endif %}
     </div>
 </header>

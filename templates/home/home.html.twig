@@ -1,9 +1,32 @@
 {% extends 'base.html.twig' %}
 
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('styles/home.css') }}">
+{% endblock %}
+
 {% block title %}DuelistDepot{% endblock %}
 
 {% block body %}
-    <main>
-        <p>{{ 'Toutes les cartes, un seul endroit'|trans }}</p>
-    </main>
+    <section class="hero-container">
+        <div class="shine-text">
+            <span>D</span><span>u</span><span>e</span><span>l</span><span>i</span><span>s</span><span>t</span>
+            <span> </span>
+            <span>D</span><span>e</span><span>p</span><span>o</span><span>t</span>
+        </div>
+
+        <div class="secondary-text flex flex-row">
+            <p class="subtitle ">{{ "Tout l'univers Yu-Gi-Oh en un seul endroit"|trans }}</p>
+            <div class="words-carousel text-indigo-600">
+                <div class="words-wrapper">
+                    <span class="word">{{ "cartes"|trans }}</span>
+                    <span class="word">{{ "boosters"|trans }}</span>
+                    <span class="word">{{ "accessoires"|trans }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="call-to-action bg-indigo-600">
+            <a href="{{ path('browse') }}" class="btn btn-primary">{{ "Explorez maintenant"|trans }}</a>
+        </div>
+    </section>
 {% endblock %}
