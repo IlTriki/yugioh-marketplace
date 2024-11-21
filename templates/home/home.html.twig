@@ -1,32 +1,41 @@
 {% extends 'base.html.twig' %}
 
 {% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('styles/home.css') }}">
+	<link rel="stylesheet" href="{{ asset('styles/home.css') }}">
 {% endblock %}
 
-{% block title %}DuelistDepot{% endblock %}
+{% block title %}DuelistDepot
+{% endblock %}
 
 {% block body %}
-    <section class="hero-container">
-        <div class="shine-text">
-            <span>D</span><span>u</span><span>e</span><span>l</span><span>i</span><span>s</span><span>t</span>
-            <span> </span>
-            <span>D</span><span>e</span><span>p</span><span>o</span><span>t</span>
-        </div>
+	<section class="hero-container">
+		<div class="shine-text text-6xl md:text-8xl">
+			<span>D</span>
+			<span>u</span>
+			<span>e</span>
+			<span>l</span>
+			<span>i</span>
+			<span>s</span>
+			<span>t</span>
+			<span></span>
+			<span>D</span>
+			<span>e</span>
+			<span>p</span>
+			<span>o</span>
+			<span>t</span>
+		</div>
 
-        <div class="secondary-text flex flex-row">
-            <p class="subtitle ">{{ "Tout l'univers Yu-Gi-Oh en un seul endroit"|trans }}</p>
-            <div class="words-carousel text-indigo-600">
-                <div class="words-wrapper">
-                    <span class="word">{{ "cartes"|trans }}</span>
-                    <span class="word">{{ "boosters"|trans }}</span>
-                    <span class="word">{{ "accessoires"|trans }}</span>
-                </div>
-            </div>
-        </div>
+		<div class="secondary-text flex flex-row">
+			<p class="subtitle text-xl md:text-3xl">{{ "Tout l'univers Yu-Gi-Oh en un seul endroit"|trans }}</p>
+			<div class="text-primary ml-2 overflow-hidden relative subtitle">
+				<div class="words-wrapper text-xl md:text-3xl flex flex-col gap-0 h-8 overflow-hidden relative">
+					<span class="word block">{{ "cartes"|trans }}</span>
+					<span class="word block">{{ "boosters"|trans }}</span>
+					<span class="word block">{{ "accessoires"|trans }}</span>
+				</div>
+			</div>
+		</div>
 
-        <div class="call-to-action bg-indigo-600">
-            <a href="{{ path('browse') }}" class="btn btn-primary">{{ "Explorez maintenant"|trans }}</a>
-        </div>
-    </section>
+		<a href="{{ path('browse') }}" class="btn btn-primary subtitle">{{ "Explorez maintenant"|trans }}</a>
+	</section>
 {% endblock %}

@@ -28,19 +28,29 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     #[ORM\Column(type: 'string', length: 255)]
     private string $passwordHash;
 
+    #[ORM\Column(type: 'string', length: 100)]
+    private string $firstName;
+
+    #[ORM\Column(type: 'string', length: 100)]
+    private string $lastName;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Order::class)]
+    private Collection $orders;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Address::class)]
+    private Collection $addresses;
+
     #[ORM\Column(type: 'string', length: 20)]
     private string $role;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Cart::class, cascade: ['persist', 'remove'])]
-    private Collection $cartItems;
-
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Orders::class, cascade: ['persist', 'remove'])]
-    private Collection $orders;
+    private Collection $cart    ;
 
     public function __construct()
     {
-        $this->cartItems = new ArrayCollection();
         $this->orders = new ArrayCollection();
+        $this->addresses = new ArrayCollection();
+        $this->carts = new ArrayCollection();
     }
 
     public function getId(): int
@@ -75,9 +85,83 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
         return $this->passwordHash;
     }
 
-    public function setPasswordHash(string $passwordHash): self
+    public function setPasswordHash(string $passwordHash)
     {
         $this->passwordHash = $passwordHash;
+        return $this;
+    }
+
+    public function getFirstName(): string
+    {
+        return $this->firstName;
+    }
+
+    public function setFirstName(string $firstName)
+    {
+        $this->firstName = $firstName;
+        return $this;
+    }
+
+    public function getLastName(): string
+    {
+        return $this->lastName;
+    }
+
+    public function setLastName(string $lastName)
+    {
+        $this->lastName = $lastName;
+        return $this;
+    }
+
+    public function getOrders(): Collection
+    {
+        return $this->orders;
+    }
+
+    public function addOrder(Order $order)
+    {
+        if (!$this->orders->contains($order)) {
+            $this->orders[] = $order;
+            $order->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrder(Order $order)
+    {
+        if ($this->orders->removeElement($order)) {
+            if ($order->getUser() === $this) {
+                $order->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getAddresses(): Collection
+    {
+        return $this->addresses;
+    }
+
+    public function addAddress(Address $address)
+    {
+        if (!$this->addresses->contains($address)) {
+            $this->addresses[] = $address;
+            $address->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAddress(Address $address)
+    {
+        if ($this->addresses->removeElement($address)) {
+            if ($address->getUser() === $this) {
+                $address->setUser(null);
+            }
+        }
+
         return $this;
     }
 
@@ -92,60 +176,35 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
         return $this;
     }
 
-    public function getCartItems(): Collection
+    public function getRoles(): array
     {
-        return $this->cartItems;
+        return [$this->role];
     }
 
-    public function addCartItem(Cart $cartItem)
+    public function getCarts(): Collection
     {
-        if (!$this->cartItems->contains($cartItem)) {
-            $this->cartItems[] = $cartItem;
-            $cartItem->setUser($this);
+        return $this->carts;
+    }
+
+    public function addCart(Cart $cart)
+    {
+        if (!$this->carts->contains($cart)) {
+            $this->carts[] = $cart;
+            $cart->setUser($this);
         }
 
         return $this;
     }
 
-    public function removeCartItem(Cart $cartItem)
+    public function removeCart(Cart $cart)
     {
-        if ($this->cartItems->contains($cartItem)) {
-            $this->cartItems->removeElement($cartItem);
-        }
-
-        return $this;
-    }
-
-    public function getOrders(): Collection
-    {
-        return $this->orders;
-    }
-
-    public function addOrder(Orders $orders)
-    {
-        if (!$this->orders->contains($orders)) {
-            $this->orders[] = $orders;
-            $orders->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeOrder(Orders $orders)
-    {
-        if ($this->orders->contains($orders)) {
-            $this->orders->removeElement($orders);
-            if ($orders->getUser() === $this) {
-                $orders->setUser(null);
+        if ($this->carts->removeElement($cart)) {
+            if ($cart->getUser() === $this) {
+                $cart->setUser(null);
             }
         }
 
         return $this;
-    }
-
-    public function getRoles(): array
-    {
-        return [$this->role];
     }
 
     public function eraseCredentials(): void

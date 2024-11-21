@@ -3,7 +3,5 @@
 @tailwind utilities;
 
 body {
-    /* background-color: #141E30; */
-    background-color: black;
     font-family: 'Poppins', sans-serif;
 }

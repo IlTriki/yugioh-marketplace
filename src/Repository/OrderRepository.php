@@ -2,22 +2,22 @@
 
 namespace App\Repository;
 
-use App\Entity\CardSet;
+use App\Entity\Order;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<CardSet>
+ * @extends ServiceEntityRepository<Order>
  */
-class CardSetRepository extends ServiceEntityRepository
+class OrderRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, CardSet::class);
+        parent::__construct($registry, Order::class);
     }
 
     //    /**
-    //     * @return CardSet[] Returns an array of CardSet objects
+    //     * @return Order[] Returns an array of Order objects
     //     */
     //    public function findByExampleField($value): array
     //    {
@@ -31,7 +31,7 @@ class CardSetRepository extends ServiceEntityRepository
     //        ;
     //    }
 
-    //    public function findOneBySomeField($value): ?CardSet
+    //    public function findOneBySomeField($value): ?Order
     //    {
     //        return $this->createQueryBuilder('c')
     //            ->andWhere('c.exampleField = :val')

@@ -1,14 +1,14 @@
 <?php
-
 namespace App\Entity;
 
-use App\Repository\CardRepository;
-use Doctrine\ORM\Mapping as ORM;
+use App\Repository\ProductRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
+use App\Enums\ProductStatusEnum;
 
-#[ORM\Entity(repositoryClass: CardRepository::class)]
-class Card
+#[ORM\Entity(repositoryClass: ProductRepository::class)]
+class Product
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -18,14 +18,20 @@ class Card
     #[ORM\Column(type: 'string', length: 255)]
     private string $name;
 
+    #[ORM\Column(type: 'decimal', precision: 10, scale: 2)]
+    private float $price;
+
+    #[ORM\Column(type: 'text')]
+    private string $description;
+
+    #[ORM\Column(type: 'integer')]
+    private int $stock;
+
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $type = null;
 
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
     private ?string $frameType = null;
-
-    #[ORM\Column(type: 'text', nullable: true)]
-    private ?string $description = null;
 
     #[ORM\Column(type: 'integer', nullable: true)]
     private ?int $atk = null;
@@ -42,19 +48,22 @@ class Card
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
     private ?string $attribute = null;
 
-    #[ORM\OneToMany(mappedBy: 'card', targetEntity: CardSet::class, cascade: ['persist', 'remove'])]
-    private Collection $cardSets;
+    #[ORM\Column(type: 'string', enumType: ProductStatus::class)]
+    private ProductStatus $status;
 
-    #[ORM\OneToMany(mappedBy: 'card', targetEntity: CardImage::class, cascade: ['persist', 'remove'])]
-    private Collection $cardImages;
+    #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'products')]
+    private ?Category $category = null;
 
-    #[ORM\OneToOne(mappedBy: 'card', targetEntity: Stock::class, cascade: ['persist', 'remove'])]
-    private ?Stock $stock;
+    #[ORM\OneToMany(mappedBy: 'product', targetEntity: OrderItem::class)]
+    private Collection $orderItems;
+
+    #[ORM\OneToMany(mappedBy: 'product', targetEntity: Image::class)]
+    private Collection $images;
 
     public function __construct()
     {
-        $this->cardSets = new ArrayCollection();
-        $this->cardImages = new ArrayCollection();
+        $this->orderItems = new ArrayCollection();
+        $this->images = new ArrayCollection();
     }
 
     public function getId(): int
@@ -73,6 +82,16 @@ class Card
         return $this;
     }
 
+    public function getPrice(): float
+    {
+        return $this->price;
+    }
+
+    public function setPrice(float $price)
+    {
+        $this->price = $price;
+        return $this;
+    }
     public function getType(): ?string
     {
         return $this->type;
@@ -161,68 +180,88 @@ class Card
         return $this;
     }
 
-    public function getCardSets(): Collection
-    {
-        return $this->cardSets;
-    }
-
-    public function addCardSet(CardSet $cardSet)
-    {
-        if (!$this->cardSets->contains($cardSet)) {
-            $this->cardSets[] = $cardSet;
-            $cardSet->setCard($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCardSet(CardSet $cardSet)
-    {
-        if ($this->cardSets->contains($cardSet)) {
-            $this->cardSets->removeElement($cardSet);
-            if ($cardSet->getCard() === $this) {
-                $cardSet->setCard(null);
-            }
-        }
-
-        return $this;
-    }
-
-    public function getCardImages(): Collection
-    {
-        return $this->cardImages;
-    }
-
-    public function addCardImage(CardImage $cardImage)
-    {
-        if (!$this->cardImages->contains($cardImage)) {
-            $this->cardImages[] = $cardImage;
-            $cardImage->setCard($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCardImage(CardImage $cardImage)
-    {
-        if ($this->cardImages->contains($cardImage)) {
-            $this->cardImages->removeElement($cardImage);
-            if ($cardImage->getCard() === $this) {
-                $cardImage->setCard(null);
-            }
-        }
-
-        return $this;
-    }
-
-    public function getStock(): ?Stock
+    public function getStock(): int
     {
         return $this->stock;
     }
 
-    public function setStock(?Stock $stock)
+    public function setStock(int $stock)
     {
         $this->stock = $stock;
+        return $this;
+    }
+
+    public function getStatus(): ProductStatus
+    {
+        return $this->status;
+    }
+
+    public function setStatus(ProductStatus $status)
+    {
+        $this->status = $status;
+        return $this;
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category)
+    {
+        $this->category = $category;
+        return $this;
+    }
+
+    public function getOrderItems(): Collection
+    {
+        return $this->orderItems;
+    }
+
+    public function addOrderItem(OrderItem $orderItem)
+    {
+        if (!$this->orderItems->contains($orderItem)) {
+            $this->orderItems[] = $orderItem;
+            $orderItem->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrderItem(OrderItem $orderItem)
+    {
+        if ($this->orderItems->removeElement($orderItem)) {
+            if ($orderItem->getProduct() === $this) {
+                $orderItem->setProduct(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getImages(): Collection
+    {
+        return $this->images;
+    }
+
+    public function addImage(Image $image)
+    {
+        if (!$this->images->contains($image)) {
+            $this->images[] = $image;
+            $image->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeImage(Image $image)
+    {
+        if ($this->images->removeElement($image)) {
+            if ($image->getProduct() === $this) {
+                $image->setProduct(null);
+            }
+        }
+
         return $this;
     }
 }

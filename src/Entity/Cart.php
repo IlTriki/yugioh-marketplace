@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\CartRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CartRepository::class)]
@@ -13,16 +15,16 @@ class Cart
     #[ORM\Column(type: 'integer')]
     private int $id;
 
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'cartItems')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'carts')]
     private User $user;
 
-    #[ORM\ManyToOne(targetEntity: Stock::class, inversedBy: 'cartItems')]
-    #[ORM\JoinColumn(nullable: false)]
-    private Stock $stock;
+    #[ORM\OneToMany(mappedBy: 'cart', targetEntity: CartItem::class, cascade: ['persist', 'remove'])]
+    private Collection $items;
 
-    #[ORM\Column(type: 'integer')]
-    private int $quantity;
+    public function __construct()
+    {
+        $this->items = new ArrayCollection();
+    }
 
     public function getId(): int
     {
@@ -34,31 +36,35 @@ class Cart
         return $this->user;
     }
 
-    public function setUser(User $user)
+    public function setUser(User $user): self
     {
         $this->user = $user;
         return $this;
     }
 
-    public function getStock(): Stock
+    public function getItems(): Collection
     {
-        return $this->stock;
+        return $this->items;
     }
 
-    public function setStock(?Stock $stock)
+    public function addItem(CartItem $item): self
     {
-        $this->stock = $stock;
+        if (!$this->items->contains($item)) {
+            $this->items[] = $item;
+            $item->setCart($this);
+        }
+
         return $this;
     }
 
-    public function getQuantity(): int
+    public function removeItem(CartItem $item): self
     {
-        return $this->quantity;
-    }
+        if ($this->items->removeElement($item)) {
+            if ($item->getCart() === $this) {
+                $item->setCart(null);
+            }
+        }
 
-    public function setQuantity(int $quantity)
-    {
-        $this->quantity = $quantity;
         return $this;
     }
 }
