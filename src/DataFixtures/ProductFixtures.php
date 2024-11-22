@@ -5,8 +5,9 @@ use App\Entity\Product;
 use App\Entity\Category;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
-class ProductFixtures extends Fixture
+class ProductFixtures extends Fixture implements DependentFixtureInterface
 {
     public function load(ObjectManager $manager): void
     {
@@ -29,7 +30,6 @@ class ProductFixtures extends Fixture
             $product->setRace($cardData['race'] ?? null);
             $product->setAttribute($cardData['attribute'] ?? null);
             $product->setStock(100);
-            $product->setStatus(\App\Enums\ProductStatusEnum::AVAILABLE);
 
             $firstSet = $cardData['card_sets'][0] ?? null;
             if ($firstSet) {

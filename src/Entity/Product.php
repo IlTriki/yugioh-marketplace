@@ -5,7 +5,7 @@ use App\Repository\ProductRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use App\Enums\ProductStatusEnum;
+use App\Enums\ProductStatus;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
 class Product
