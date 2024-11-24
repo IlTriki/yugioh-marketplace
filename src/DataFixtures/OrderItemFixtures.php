@@ -12,19 +12,19 @@ class OrderItemFixtures extends Fixture implements DependentFixtureInterface
     {
         $orderItems = [
             [
-                'order' => 'order_1',
+                'order' => 'ORD-001',
                 'product' => 'product_0',
                 'quantity' => 2,
                 'productPrice' => 50.00,
             ],
             [
-                'order' => 'order_1',
+                'order' => 'ORD-002',
                 'product' => 'product_1',
                 'quantity' => 1,
                 'productPrice' => 25.00,
             ],
             [
-                'order' => 'order_2',
+                'order' => 'ORD-003',
                 'product' => 'product_2',
                 'quantity' => 3,
                 'productPrice' => 15.00,

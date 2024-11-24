@@ -7,16 +7,8 @@
 {% block title %}DuelistDepot{% endblock %}
 
 {% block body %}
-    <div class="card bg-transparent text-transparent">
-        <div class="loader">
-            <p>{{ "Tout l'univers Yu-Gi-Oh en un seul endroit"|trans }}</p>
-            <div class="words text-primary">
-                <span class="word">{{ "cartes"|trans }}</span>
-                <span class="word">{{ "boosters"|trans }}</span>
-                <span class="word">{{ "tapis"|trans }}</span>
-                <span class="word">{{ "deck box"|trans }}</span>
-                <span class="word">{{ "protege-cartes"|trans }}</span>
-            </div>
-        </div>
-    </div>
+
+    {% include 'browse/card_section.html.twig' %}
+    {% include 'browse/booster_section.html.twig' %}
+    {% include 'browse/accessory_section.html.twig' %}
 {% endblock %}

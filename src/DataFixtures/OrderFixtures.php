@@ -5,7 +5,7 @@ use App\Entity\Order;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
-use App\Enums\OrderStatus;
+use App\Enum\OrderStatus;
 
 class OrderFixtures extends Fixture implements DependentFixtureInterface
 {
@@ -15,13 +15,13 @@ class OrderFixtures extends Fixture implements DependentFixtureInterface
             [
                 'reference' => 'ORD-001',
                 'createdAt' => new \DateTime('2024-01-01 10:00:00'),
-                'status' => OrderStatus::IN_PREPARATION,
+                'status' => OrderStatus::SENDING,
                 'user' => 'user1',
             ],
             [
                 'reference' => 'ORD-002',
                 'createdAt' => new \DateTime('2024-01-02 12:00:00'),
-                'status' => OrderStatus::SHIPPED,
+                'status' => OrderStatus::SENDING,
                 'user' => 'user2',
             ],
             [

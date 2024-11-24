@@ -34,13 +34,21 @@ class RegistrationController extends AbstractController
 
             $user->setUsername($username);
 
+            $lastName = $form->get('lastName')->getData();
+
+            $user->setLastName($last);
+
+            $lastName = $form->get('firstName')->getData();
+
+            $user->setLastName($last);
+
             // encode the plain password
             $user->setPasswordHash($userPasswordHasher->hashPassword($user, $plainPassword));
 
+            $user->setRole('USER');
+
             $entityManager->persist($user);
             $entityManager->flush();
-
-            // do anything else you need here, like send an email
 
             return $security->login($user, LoginFormAuthenticator::class, 'main');
         }

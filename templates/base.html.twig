@@ -11,16 +11,16 @@
 			<link rel="stylesheet" href="{{ asset('styles/app.css') }}">
 		{% endblock %}
 
+		{% block importmap %}
+			{{ importmap('app') }}
+		{% endblock %}
 		{% block javascripts %}
-			{% block importmap %}
-				{{ importmap('app') }}
-			{% endblock %}
 		{% endblock %}
 	</head>
-	<body {{ stimulus_controller('app') }} data-app-mercure="{{ mercure('log_debug') }}" class="bg-background flex flex-col justify-between min-h-screen">
+	<body {{ stimulus_controller('app') }} data-app-mercure="{{ mercure('log_debug') }}" class="bg-background flex flex-col min-h-screen">
 
 		{% include '_header.html.twig' %}
-		<main class="container mx-auto text-textPrimary"> {% block body %}{% endblock %}
+		<main class="container mx-auto text-textPrimary min-h-[80vh]"> {% block body %}{% endblock %}
         </main>
 			{% include '_footer.html.twig' %}
 		</body>

@@ -1,5 +1,5 @@
 <?php
-namespace App\Entity;
+namespace App\Enum;
 
 enum ProductStatus:String {
     case AVAILABLE = "Disponible";

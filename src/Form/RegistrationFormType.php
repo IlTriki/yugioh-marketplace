@@ -23,6 +23,24 @@ class RegistrationFormType extends AbstractType
                     'autocomplete' => 'email'
                 ]
             ])
+            ->add('firstName', null, [
+                'attr' => [
+                    'placeholder' => 'First Name',
+                    'class' => 'form-control',
+                ],
+                'constraints' => [
+                    new NotBlank(['message' => 'First Name is required']),
+                ],
+            ])
+            ->add('lastName', null, [
+                'attr' => [
+                    'placeholder' => 'Last Name',
+                    'class' => 'form-control',
+                ],
+                'constraints' => [
+                    new NotBlank(['message' => 'Last Name is required']),
+                ],
+            ])
             ->add('username', null, [
                 'attr' => [
                     'placeholder' => 'Username',

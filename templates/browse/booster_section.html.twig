@@ -1,0 +1,34 @@
+<section>
+  <div class="mx-auto max-w-screen-2xl py-8 sm:py-12">
+    <div class="flex flex-row content-end justify-between max-sm:justify-evenly">
+        <h2 class="text-xl font-bold text-gray-900 sm:text-3xl">{{ "Decouvre nos boosters"|trans }}</h2>
+        <a href="{{ path('boosters') }}" class="text-primary">{{ "Voir tout" | trans }}</a>
+    </div>
+
+    <ul class="mt-8 grid gap-18 sm:grid-cols-2 lg:grid-cols-4">
+        {% for booster in boosters %}
+            <li class="max-sm:w-64 max-sm:mx-auto">
+                <a href="#" class="group block">
+                    <img
+                        src="{{ booster.images|first.url|default('https://via.placeholder.com/350x450') }}"
+                        alt=""
+                        class="h-auto w-full object-contain transition duration-500 group-hover:scale-105"
+                    />
+
+                    <div class="relative pt-3">
+                        <h3 class="text-xl text-gray-700 group-hover:underline group-hover:underline-offset-4">
+                        {{ booster.name }}
+                        </h3>
+
+                        <p class="mt-2">    
+                        <span class="tracking-wider text-gray-900"> {{ booster.price | number_format(2, '.', ',') }} € </span>
+                        </p>
+                    </div>
+                </a>
+            </li>
+        {% else %}
+            <p>{{ "Aucun booster trouvé" | trans }}</p>
+        {% endfor %}
+    </ul>
+  </div>                                        
+</section>
