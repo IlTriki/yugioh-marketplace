@@ -47,6 +47,56 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface
             $this->addReference('product_' . $index, $product);
         }
 
+        $product = new Product();
+        $product->setName('Maze of the Master');
+        $product->setDescription('Maze of the Master lets you explore the Deck ideas of your favorite Duelists, with dozens of new cards in our latest annual anime-themed booster set:\n10 new Egyptian and Trap Monster-themed cards inspired by Odion’s Battle City Deck!\n7 new cards inspired by Mizar’s “Galaxy”/”Tachyon” Deck from Yu‑Gi‑Oh! ZEXAL!\n7 new cards inspired by Kaiba’s X-Y-Z monsters from Battle City, and used again by Chazz in Yu‑Gi‑Oh! GX!\n7 new “Trickstar” cards inspired by Blue Angel’s Deck from Yu‑Gi‑Oh! VRAINS!\n7 new “Performage” monsters from Yu‑Gi‑Oh! ARC-V!\nPlus many more! 60 new cards in all to add to your Decks!');
+        $product->setStock(100);
+        $product->setStatus(ProductStatus::AVAILABLE);
+        $product->setCategory($boosterCategory);
+        $product->setPrice(19.99);
+        $manager->persist($product);
+        $this->addReference('product_maze_of_the_master', $product);
+
+        $product = new Product();
+        $product->setName('Rage of the Abyss');
+        $product->setDescription('Rage of the Abyss splashes down with 100 new cards in total, including the second wave for the World Premiere theme that debuted in The Infinite Forbidden. It also continues the 25th anniversary celebration by including 25 Quarter Century Secret Rares, including 1 special card!\nRage of the Abyss core booster set looks like this:\n10 Secret Rares\n14 Ultra Rares\n26 Super Rares\n50 Commons');
+        $product->setStock(100);
+        $product->setStatus(ProductStatus::AVAILABLE);
+        $product->setCategory($boosterCategory);
+        $product->setPrice(13.99);
+        $manager->persist($product);
+        $this->addReference('product_rage_of_the_abyss', $product);
+
+        $product = new Product();
+        $product->setName('The Infinite Forbidden');
+        $product->setDescription('The Infinite Forbidden is the first booster set of the 25th anniversary year! It’s a 100-card booster set that celebrates the 25th anniversary of Yu-Gi-Oh! with 25 special cards, including 1 Secret Rare! The Infinite Forbidden core booster set looks like this:\n10 Secret Rares\n14 Ultra Rares\n26 Super Rares\n50 Commons');
+        $product->setStock(100);
+        $product->setStatus(ProductStatus::AVAILABLE);
+        $product->setCategory($boosterCategory);
+        $product->setPrice(12.99);
+        $manager->persist($product);
+        $this->addReference('product_the_infinite_forbidden', $product);
+
+        $product = new Product();
+        $product->setName('Quazar Blazer Playmat');
+        $product->setDescription('The Quazar Blazer Playmat is a 100x150cm playmat featuring the Quazar Blazer theme. It is made of high-quality materials and is designed to provide a comfortable and durable playing surface.');
+        $product->setStock(100);
+        $product->setStatus(ProductStatus::AVAILABLE);
+        $product->setCategory($accessoryCategory);
+        $product->setPrice(9.99);
+        $manager->persist($product);
+        $this->addReference('product_quazar_blazer_playmat', $product);
+
+        $product = new Product();
+        $product->setName('The I:P Masquerena Playmat');
+        $product->setDescription('The I:P Masquerena Playmat is a 100x150cm playmat featuring the The I:P Masquerena theme. It is made of high-quality materials and is designed to provide a comfortable and durable playing surface.');
+        $product->setStock(100);
+        $product->setStatus(ProductStatus::AVAILABLE);
+        $product->setCategory($accessoryCategory);
+        $product->setPrice(9.99);
+        $manager->persist($product);
+        $this->addReference('product_ip_masquerena_playmat', $product);
+
         $manager->flush();
     }
 

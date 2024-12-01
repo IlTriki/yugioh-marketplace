@@ -6,13 +6,56 @@
 <div class="container mx-auto px-4 py-8" 
      data-controller="product-detail"
      data-product-detail-topic-value="{{ topic }}"
-     data-product-detail-mercure-url-value="{{ mercure_url }}">
+     data-product-detail-mercure-url-value="{{ mercure_url }}"
+     data-product-detail-product-id-value="{{ product.id }}">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div class="product-images">
+        <div class="product-images" data-controller="image-gallery">
             {% if product.images is not empty %}
-                <img src="{{ product.images|first.url }}" alt="{{ product.name }}" class="w-full h-auto">
+                <div class="mb-4 relative">
+                    {% for image in product.images %}
+                        <div class="aspect-w-1 aspect-h-1 w-full"
+                             data-image-gallery-target="mainImage"
+                             style="display: {{ loop.first ? 'block' : 'none' }}">
+                            <img src="{{ image.url }}" 
+                                 alt="{{ product.name }}" 
+                                 class="w-full h-auto object-contain rounded-lg">
+                        </div>
+                    {% endfor %}
+                    
+                    {% if product.images|length > 1 %}
+                        <button class="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white/80 rounded-full p-2 hover:bg-white"
+                                data-action="image-gallery#previous">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                            </svg>
+                        </button>
+                        <button class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white/80 rounded-full p-2 hover:bg-white"
+                                data-action="image-gallery#next">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                            </svg>
+                        </button>
+                    {% endif %}
+                </div>
+
+                {# Thumbnail navigation #}
+                {% if product.images|length > 1 %}
+                    <div class="grid grid-cols-6 gap-2">
+                        {% for image in product.images %}
+                            <button class="aspect-w-1 aspect-h-1 rounded-lg overflow-hidden border-2 hover:border-primary transition-colors duration-200 
+                                         {{ loop.first ? 'border-primary' : 'border-transparent' }}"
+                                    data-image-gallery-target="thumbnail"
+                                    data-action="click->image-gallery#selectImage"
+                                    data-index="{{ loop.index0 }}">
+                                <img src="{{ image.url }}" 
+                                     alt="{{ product.name }}" 
+                                     class="w-full h-full object-cover">
+                            </button>
+                        {% endfor %}
+                    </div>
+                {% endif %}
             {% else %}
-                <img src="https://via.placeholder.com/600x400" alt="No image available" class="w-full h-auto">
+                <img src="https://via.placeholder.com/600x400" alt="No image available" class="w-full h-auto rounded-lg">
             {% endif %}
         </div>
 
@@ -22,15 +65,16 @@
             
             <div class="mb-4" data-product-detail-target="stockStatus">
                 {% if product.stock > 0 and product.status.value == productStatuses[0].value %}
-                    <span class="text-green-600">En stock ({{ product.stock }} disponible)</span>
+                    <span class="text-green-600">{{ 'En stock'|trans }} ({{ product.stock }} {{ 'disponible'|trans }})</span>
                 {% elseif product.status.value == productStatuses[1].value %}
-                    <span class="text-red-600">En rupture de stock</span>
+                    <span class="text-red-600">{{ 'En rupture de stock'|trans }}</span>
                 {% else %}
-                    <span class="text-yellow-600">Pré-commande ({{ product.stock }} disponible)</span>
+                    <span class="text-yellow-600">{{ 'Pré-commande'|trans }} ({{ product.stock }} {{ 'disponible'|trans }})</span>
                 {% endif %}
             </div>
             <button class="{% if product.stock <= 0 %}bg-gray-700{% else %}bg-primary hover:bg-primary-dark{% endif %} text-white px-6 py-2 rounded-lg mb-6"
                     data-product-detail-target="addToCartButton"
+                    data-action="click->product-detail#addToCart"
                     {% if product.stock <= 0 %}disabled{% endif %}>
                 {{ product.stock <= 0 ? 'Rupture de stock' : 'Ajouter au panier'|trans }}
             </button>

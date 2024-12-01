@@ -124,18 +124,16 @@
         if (!conditionalFields) {
             let conditionalFields = document.getElementById('conditionalFields');
         }
-        if (product_category.value == 1) {
+        if (product_category.options[product_category.selectedIndex].text == "card") {
             conditionalFields.classList.remove('hidden');
         } else {
-            console.log(product_category.value);
             conditionalFields.classList.add('hidden');
         }
 
         product_category.addEventListener('change', function() {
-            if (this.value == 1) {
+            if (this.options[this.selectedIndex].text == "card") {
                 conditionalFields.classList.remove('hidden');
             } else {
-                console.log(this.text);
                 conditionalFields.classList.add('hidden');
             }
         });

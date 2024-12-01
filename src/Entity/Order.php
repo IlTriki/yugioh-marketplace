@@ -28,8 +28,11 @@ class Order
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'orders')]
     private User $user;
 
-    #[ORM\OneToMany(mappedBy: 'order', targetEntity: OrderItem::class)]
+    #[ORM\OneToMany(mappedBy: 'order', targetEntity: OrderItem::class, cascade: ['persist', 'remove'])]
     private Collection $orderItems;
+
+    #[ORM\ManyToOne(targetEntity: Address::class)]
+    private Address $deliveryAddress;
 
     public function __construct()
     {
@@ -111,4 +114,21 @@ class Order
         return $this;
     }
 
+    public function getTotal(): float
+    {
+        return $this->orderItems->reduce(function (float $total, OrderItem $item) {
+            return $total + ($item->getProductPrice() * $item->getQuantity());
+        }, 0.0);
+    }
+
+    public function getDeliveryAddress(): Address
+    {
+        return $this->deliveryAddress;
+    }
+
+    public function setDeliveryAddress(Address $deliveryAddress): self
+    {
+        $this->deliveryAddress = $deliveryAddress;
+        return $this;
+    }
 }

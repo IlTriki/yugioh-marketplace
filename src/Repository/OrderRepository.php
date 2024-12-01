@@ -187,4 +187,10 @@ class OrderRepository extends ServiceEntityRepository
             ->getQuery()
             ->getSingleScalarResult() > 0;
     }
+
+    public function save(Order $order): void
+    {
+        $this->getEntityManager()->persist($order);
+        $this->getEntityManager()->flush();
+    }
 }

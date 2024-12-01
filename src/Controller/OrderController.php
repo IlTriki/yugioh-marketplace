@@ -45,19 +45,6 @@ class OrderController extends AbstractController
             return $this->redirectToRoute('cart_view');
         }
 
-        foreach ($cart->getItems() as $cartItem) {
-            $product = $cartItem->getProduct();
-            if ($cartItem->getQuantity() > $product->getStock()) {
-                $this->addFlash('error', sprintf(
-                    'Not enough stock for product "%s". Available: %d, Requested: %d',
-                    $product->getName(),
-                    $product->getStock(),
-                    $cartItem->getQuantity()
-                ));
-                return $this->redirectToRoute('cart_view');
-            }
-        }
-
         $selectedAddress = null;
         if ($addressId = $request->query->get('address')) {
             $selectedAddress = $this->addressRepository->find($addressId);
@@ -72,6 +59,7 @@ class OrderController extends AbstractController
             'cart' => $cart,
             'mercure_url' => $this->mercurePublicUrl,
             'selectedAddress' => $selectedAddress,
+            'user' => $this->getUser()
         ]);
     }
 
@@ -110,11 +98,6 @@ class OrderController extends AbstractController
 
         foreach ($cart->getItems() as $cartItem) {
             $product = $cartItem->getProduct();
-            
-            if ($cartItem->getQuantity() > $product->getStock()) {
-                $this->addFlash('error', 'Some items are no longer available');
-                return $this->redirectToRoute('cart_view');
-            }
 
             $orderItem = new OrderItem();
             $orderItem->setOrder($order)
@@ -122,7 +105,7 @@ class OrderController extends AbstractController
                      ->setQuantity($cartItem->getQuantity())
                      ->setProductPrice($cartItem->getPriceAtAddition());
 
-            $newStock = $product->getStock() - $cartItem->getQuantity();
+            $newStock = $product->getStock();
             $product->setStock($newStock);
             
             if ($newStock === 0) {
@@ -143,7 +126,7 @@ class OrderController extends AbstractController
 
         $this->entityManager->persist($order);
         
-        $cart->setStatus('completed');
+        $this->entityManager->remove($cart);
         
         $this->entityManager->flush();
 
@@ -151,7 +134,7 @@ class OrderController extends AbstractController
     }
 
     #[Route('/orders/success/{reference}', name: 'order_success')]
-    public function success(Order $order): Response
+    public function success(string $reference): Response
     {
         if (!$this->getUser()) {
             return $this->redirectToRoute('login');
@@ -160,6 +143,12 @@ class OrderController extends AbstractController
             return $this->redirectToRoute('admin_home');
         }
         
+        $order = $this->entityManager->getRepository(Order::class)->findOneBy(['reference' => $reference]);
+        
+        if (!$order) {
+            throw $this->createNotFoundException('Order not found');
+        }
+
         if ($order->getUser() !== $this->getUser()) {
             throw $this->createAccessDeniedException();
         }

@@ -5,6 +5,11 @@
 {% block javascripts_head %}
     {{ parent() }}
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.dispatchEvent(new Event('chart:loaded'));
+        });
+    </script>
 {% endblock %}
 
 {% block body %}
@@ -33,7 +38,7 @@
                 </div>
                 <div>
                     <h4 class="font-semibold">Pre-order</h4>
-                    <p>{{ availabilityRatio['precommande'] ?? 0 }}%</p>
+                    <p>{{ availabilityRatio['en précommande'] ?? 0 }}%</p>
                 </div>
             </div>
         </div>

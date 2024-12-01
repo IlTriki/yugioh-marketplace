@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Cart;
 use App\Entity\CartItem;
 use App\Entity\Product;
+use App\Enum\ProductStatus;
 use App\Repository\CartRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -77,6 +78,14 @@ class CartController extends AbstractController
             $cart->addItem($cartItem);
         }
 
+        // Update product stock
+        $newStock = $product->getStock() - $quantity;
+        $product->setStock($newStock);
+        
+        if ($newStock === 0) {
+            $product->setStatus(ProductStatus::OUT_OF_STOCK);
+        }
+
         $this->entityManager->persist($cart);
         $this->entityManager->flush();
 
@@ -84,54 +93,127 @@ class CartController extends AbstractController
         $update = new Update(
             sprintf('product/%d', $product->getId()),
             json_encode([
-                'stock' => $product->getStock() - $quantity
+                'stock' => $newStock,
+                'status' => $product->getStatus()->value
             ])
         );
         $this->hub->publish($update);
 
+        $this->publishCartUpdate($cart, 'item_added', [
+            'itemId' => $cartItem->getId(),
+            'quantity' => $cartItem->getQuantity()
+        ]);
+
         return new JsonResponse([
             'message' => 'Product added to cart',
-            'cartCount' => $cart->getItemCount()
+            'cartCount' => $cart->getItemCount(),
+            'newStock' => $newStock
         ]);
     }
 
     #[Route('/carts/remove/{id}', name: 'cart_remove', methods: ['POST'])]
     public function remove(CartItem $cartItem): JsonResponse
     {
+        if (!$this->getUser()) {
+            return new JsonResponse(['error' => 'User must be logged in'], Response::HTTP_UNAUTHORIZED);
+        }
+
         $cart = $cartItem->getCart();
-        if ($cart->getUser() !== $this->getUser()) {
-            return new JsonResponse(['error' => 'Unauthorized'], Response::HTTP_FORBIDDEN);
+        $product = $cartItem->getProduct();
+        $itemId = $cartItem->getId();
+        
+        $returnedQuantity = $cartItem->getQuantity();
+        $newStock = $product->getStock() + $returnedQuantity;
+        $product->setStock($newStock);
+        
+        if ($product->getStatus() === ProductStatus::OUT_OF_STOCK && $newStock > 0) {
+            $product->setStatus(ProductStatus::AVAILABLE);
         }
 
         $cart->removeItem($cartItem);
         $this->entityManager->remove($cartItem);
         $this->entityManager->flush();
 
+        $update = new Update(
+            sprintf('product/%d', $product->getId()),
+            json_encode([
+                'stock' => $newStock,
+                'status' => $product->getStatus()->value
+            ])
+        );
+        $this->hub->publish($update);
+
+        $this->publishCartUpdate($cart, 'item_removed', [
+            'itemId' => $itemId
+        ]);
+
         return new JsonResponse([
             'message' => 'Item removed from cart',
-            'cartCount' => $cart->getItemCount()
+            'cartCount' => $cart->getItemCount(),
+            'newTotal' => $cart->getTotal()
         ]);
     }
 
     #[Route('/carts/update/{id}', name: 'cart_update_quantity', methods: ['POST'])]
     public function updateQuantity(CartItem $cartItem, Request $request): JsonResponse
     {
-        $quantity = $request->request->getInt('quantity');
-        if ($quantity < 1) {
-            return new JsonResponse(['error' => 'Invalid quantity'], Response::HTTP_BAD_REQUEST);
+        if (!$this->getUser()) {
+            return new JsonResponse(['error' => 'User must be logged in'], Response::HTTP_UNAUTHORIZED);
         }
-
+    
+        $newQuantity = $request->request->getInt('quantity', 1);
         $product = $cartItem->getProduct();
-        if ($quantity > $product->getStock()) {
+        $currentQuantity = $cartItem->getQuantity();
+        
+        $quantityDifference = $newQuantity - $currentQuantity;
+        $newStock = $product->getStock() - $quantityDifference;
+        
+        if ($quantityDifference > 0 && $quantityDifference > $product->getStock()) {
             return new JsonResponse(['error' => 'Not enough stock'], Response::HTTP_BAD_REQUEST);
         }
-
-        $cartItem->setQuantity($quantity);
+    
+        $cartItem->setQuantity($newQuantity);
+        
+        $product->setStock($newStock);
+        
+        if ($newStock === 0) {
+            $product->setStatus(ProductStatus::OUT_OF_STOCK);
+        } elseif ($newStock > 0 && $product->getStatus() === ProductStatus::OUT_OF_STOCK) {
+            $product->setStatus(ProductStatus::AVAILABLE);
+        }
+    
         $this->entityManager->flush();
-
+    
+        $cart = $cartItem->getCart();
+        $newTotal = $cart->getTotal();
+    
+        $update = new Update(
+            sprintf('product/%d', $product->getId()),
+            json_encode([
+                'stock' => $newStock,
+                'status' => $product->getStatus()->value
+            ])
+        );
+        $this->hub->publish($update);
+    
+        $this->publishCartUpdate($cart, 'quantity_updated', [
+            'itemId' => $cartItem->getId(),
+            'quantity' => $newQuantity
+        ]);
+    
         return new JsonResponse([
-            'message' => 'Quantity updated',
-            'newTotal' => $cartItem->getCart()->getTotal()
+            'newTotal' => $newTotal,
+            'newStock' => $newStock
+        ]);
+    }
+
+    #[Route('/carts/total', name: 'cart_total')]
+    public function getCartTotal(): JsonResponse
+    {
+        $cart = $this->getOrCreateCart();
+        return new JsonResponse([
+            'total' => $cart->getTotal(),
+            'count' => $cart->getItemCount()
         ]);
     }
 
@@ -148,5 +230,18 @@ class CartController extends AbstractController
         }
         
         return $cart;
+    }
+
+    private function publishCartUpdate(Cart $cart, string $action, array $additionalData = []): void
+    {
+        $update = new Update(
+            sprintf('cart/%d', $cart->getUser()->getId()),
+            json_encode(array_merge([
+                'action' => $action,
+                'newTotal' => $cart->getTotal(),
+                'cartCount' => $cart->getItemCount()
+            ], $additionalData))
+        );
+        $this->hub->publish($update);
     }
 }

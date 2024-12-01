@@ -44,7 +44,7 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     private string $role;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Cart::class, cascade: ['persist', 'remove'])]
-    private Collection $cart    ;
+    private Collection $cart;
 
     public function __construct()
     {
@@ -181,7 +181,7 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
         return [$this->role];
     }
 
-    public function getCarts(): Collection
+    public function getCart(): Collection
     {
         return $this->cart;
     }
@@ -205,6 +205,12 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
         }
 
         return $this;
+    }
+
+    public function getCartItemCount(): int
+    {
+        $cart = $this->cart->first();
+        return $cart ? $cart->getItemCount() : 0;
     }
 
     public function eraseCredentials(): void

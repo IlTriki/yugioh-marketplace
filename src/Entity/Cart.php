@@ -67,4 +67,18 @@ class Cart
 
         return $this;
     }
+
+    public function getTotal(): float
+    {
+        return $this->items->reduce(function (float $carry, CartItem $item) {
+            return $carry + $item->getTotal();
+        }, 0);
+    }
+
+    public function getItemCount(): int
+    {
+        return $this->items->reduce(function (int $count, CartItem $item) {
+            return $count + $item->getQuantity();
+        }, 0);
+    }
 }

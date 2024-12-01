@@ -13,7 +13,7 @@
             {% if user.addresses|length > 0 %}
                 <div class="grid gap-4 mb-4">
                     {% for address in user.addresses %}
-                        <div class="border rounded-lg p-4 {% if selectedAddress and selectedAddress.id == address.id %}border-primary bg-primary/5{% else %}border-gray-200{% endif %}">
+                        <div class="border rounded-lg p-4">
                             <label class="flex items-start space-x-3">
                                 <input type="radio" 
                                        name="delivery_address" 
@@ -83,4 +83,4 @@
         </form>
     </div>
 </div>
-{% endblock %} 
+{% endblock %}

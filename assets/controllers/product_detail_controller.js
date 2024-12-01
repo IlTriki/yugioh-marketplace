@@ -4,7 +4,8 @@ export default class extends Controller {
     static targets = ['stockStatus', 'addToCartButton']
     static values = {
         topic: String,
-        mercureUrl: String
+        mercureUrl: String,
+        productId: Number
     }
 
     connect() {
@@ -39,7 +40,7 @@ export default class extends Controller {
         event.preventDefault();
         
         try {
-            const response = await fetch(`/cart/add/${this.productIdValue}`, {
+            const response = await fetch(`/carts/add/${this.productIdValue}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
@@ -49,14 +50,14 @@ export default class extends Controller {
 
             const data = await response.json();
             if (response.ok) {
-                // Update cart count in header
-                const cartCountElement = document.querySelector('[data-cart-count]');
+                const cartCountElement = document.querySelector('[data-header-target="cartCount"]');
                 if (cartCountElement) {
                     cartCountElement.textContent = data.cartCount;
                 }
                 
-                // Show success message
-                alert('Product added to cart');
+                if (data.newStock !== undefined) {
+                    this.updateProductInfo({ stock: data.newStock });
+                }
             } else {
                 alert(data.error);
             }

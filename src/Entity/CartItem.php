@@ -14,7 +14,7 @@ class CartItem
     private int $id;
 
     #[ORM\ManyToOne(targetEntity: Cart::class, inversedBy: 'items')]
-    private Cart $cart;
+    private ?Cart $cart;
 
     #[ORM\ManyToOne(targetEntity: Product::class)]
     private Product $product;
@@ -35,7 +35,7 @@ class CartItem
         return $this->cart;
     }
 
-    public function setCart(Cart $cart): self
+    public function setCart(?Cart $cart): self
     {
         $this->cart = $cart;
         return $this;
@@ -72,5 +72,10 @@ class CartItem
     {
         $this->priceAtAddition = $priceAtAddition;
         return $this;
+    }
+
+    public function getTotal(): float
+    {
+        return $this->priceAtAddition * $this->quantity;
     }
 }

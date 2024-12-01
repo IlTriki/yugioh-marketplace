@@ -16,7 +16,7 @@ class AddressFixtures extends Fixture implements DependentFixtureInterface
                 'postalCode' => '75001',
                 'city' => 'Paris',
                 'country' => 'France',
-                'user' => 'user1', // Reference from UserFixtures
+                'user' => 'user1',
             ],
             [
                 'street' => '456 Booster Street',
@@ -34,7 +34,7 @@ class AddressFixtures extends Fixture implements DependentFixtureInterface
             ],
         ];
 
-        foreach ($addresses as $data) {
+        foreach ($addresses as $i => $data) {
             $address = new Address();
             $address->setStreet($data['street']);
             $address->setPostalCode($data['postalCode']);
@@ -45,6 +45,8 @@ class AddressFixtures extends Fixture implements DependentFixtureInterface
             $address->setUser($user);
 
             $manager->persist($address);
+
+            $this->addReference('address_' . $i, $address);
         }
 
         $manager->flush();

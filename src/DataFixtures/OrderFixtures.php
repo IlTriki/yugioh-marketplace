@@ -17,18 +17,21 @@ class OrderFixtures extends Fixture implements DependentFixtureInterface
                 'createdAt' => new \DateTime('2024-01-01 10:00:00'),
                 'status' => OrderStatus::SENDING,
                 'user' => 'user1',
+                'deliveryAddress' => 'address_0',
             ],
             [
                 'reference' => 'ORD-002',
                 'createdAt' => new \DateTime('2024-01-02 12:00:00'),
                 'status' => OrderStatus::SENDING,
                 'user' => 'user2',
+                'deliveryAddress' => 'address_1',
             ],
             [
                 'reference' => 'ORD-003',
                 'createdAt' => new \DateTime('2024-01-03 14:00:00'),
                 'status' => OrderStatus::DELIVERED,
                 'user' => 'user3',
+                'deliveryAddress' => 'address_2',
             ],
         ];
 
@@ -38,7 +41,7 @@ class OrderFixtures extends Fixture implements DependentFixtureInterface
             $order->setCreatedAt($data['createdAt']);
             $order->setStatus($data['status']);
             $order->setUser($this->getReference($data['user']));
-
+            $order->setDeliveryAddress($this->getReference($data['deliveryAddress']));
             $manager->persist($order);
 
             $this->addReference($data['reference'], $order);
@@ -51,6 +54,7 @@ class OrderFixtures extends Fixture implements DependentFixtureInterface
     {
         return [
             UserFixtures::class,
+            AddressFixtures::class,
         ];
     }
 }

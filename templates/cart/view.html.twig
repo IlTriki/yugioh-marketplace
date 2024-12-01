@@ -5,7 +5,8 @@
 {% block body %}
 <div class="container mx-auto px-4 py-8" 
      data-controller="cart"
-     data-cart-mercure-url-value="{{ mercure_url }}">
+     data-cart-mercure-url-value="{{ mercure_url }}"
+     data-cart-user-id-value="{{ app.user.id }}">
     <h1 class="text-3xl font-bold mb-8">{{ 'Votre panier'|trans }}</h1>
 
     {% if cart.items|length > 0 %}
@@ -34,7 +35,8 @@
                                                value="{{ item.quantity }}" 
                                                min="1" 
                                                max="{{ item.product.stock }}"
-                                               class="w-16 text-center border-x"
+                                               class="w-16 text-center border-x no-spinners"
+                                               readonly
                                                data-action="cart#updateQuantity"
                                                data-item-id="{{ item.id }}">
                                         <button class="px-3 py-1 hover:bg-gray-100" 

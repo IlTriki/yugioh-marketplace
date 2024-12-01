@@ -3,7 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Image;
+use App\Entity\Order;
 use App\Entity\Product;
+use App\Enum\OrderStatus;
 use App\Enum\ProductStatus;
 use App\Form\ProductType;
 use App\Repository\ProductRepository;
@@ -17,6 +19,7 @@ use Knp\Component\Pager\PaginatorInterface;
 use App\Repository\CategoryRepository;
 use App\Repository\ImageRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 #[Route('/admin')]
 class AdminController extends AbstractController
@@ -194,7 +197,7 @@ class AdminController extends AbstractController
     }
 
     #[Route('/products/{id}/edit', name: 'admin_product_edit')]
-    public function editProduct(Request $request, Product $product, EntityManagerInterface $entityManager): Response
+    public function editProduct(Request $request, Product $product): Response
     {
         $form = $this->createForm(ProductType::class, $product);
 
@@ -270,5 +273,39 @@ class AdminController extends AbstractController
         }
 
         return $this->redirectToRoute('admin_products');
+    }
+
+    #[Route('/orders/{reference}/status', name: 'admin_order_status_update', methods: ['POST'])]
+    public function updateOrderStatus(
+        Request $request,
+        string $reference,
+        EntityManagerInterface $entityManager
+    ): JsonResponse {
+        $order = $this->orderRepository->findOneBy(['reference' => $reference]);
+        
+        if (!$order) {
+            return new JsonResponse([
+                'success' => false,
+                'error' => 'Order not found'
+            ], Response::HTTP_NOT_FOUND);
+        }
+        
+        $status = $request->request->get('status');
+        
+        try {
+            $newStatus = OrderStatus::from($status);
+            $order->setStatus($newStatus);
+            $this->orderRepository->save($order);
+            
+            return new JsonResponse([
+                'success' => true,
+                'newStatus' => $newStatus->value
+            ]);
+        } catch (\ValueError $e) {
+            return new JsonResponse([
+                'success' => false,
+                'error' => 'Invalid status'
+            ], Response::HTTP_BAD_REQUEST);
+        }
     }
 }
