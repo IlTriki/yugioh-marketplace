@@ -1,0 +1,82 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'Panier'|trans }}{% endblock %}
+
+{% block body %}
+<div class="container mx-auto px-4 py-8" 
+     data-controller="cart"
+     data-cart-mercure-url-value="{{ mercure_url }}">
+    <h1 class="text-3xl font-bold mb-8">{{ 'Votre panier'|trans }}</h1>
+
+    {% if cart.items|length > 0 %}
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {# Cart Items #}
+            <div class="lg:col-span-2">
+                <div class="bg-white rounded-lg shadow">
+                    {% for item in cart.items %}
+                        <div class="p-6 border-b last:border-b-0" data-cart-target="item" data-item-id="{{ item.id }}">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-4">
+                                    <img src="{{ item.product.images|first.url|default('https://via.placeholder.com/150') }}" 
+                                         alt="{{ item.product.name }}" 
+                                         class="w-24 h-24 object-contain">
+                                    <div>
+                                        <h3 class="text-lg font-semibold">{{ item.product.name }}</h3>
+                                        <p class="text-gray-600">{{ item.priceAtAddition }} €</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center space-x-4">
+                                    <div class="flex items-center border rounded">
+                                        <button class="px-3 py-1 hover:bg-gray-100" 
+                                                data-action="cart#decrementQuantity"
+                                                data-item-id="{{ item.id }}">-</button>
+                                        <input type="number" 
+                                               value="{{ item.quantity }}" 
+                                               min="1" 
+                                               max="{{ item.product.stock }}"
+                                               class="w-16 text-center border-x"
+                                               data-action="cart#updateQuantity"
+                                               data-item-id="{{ item.id }}">
+                                        <button class="px-3 py-1 hover:bg-gray-100" 
+                                                data-action="cart#incrementQuantity"
+                                                data-item-id="{{ item.id }}">+</button>
+                                    </div>
+                                    <button class="text-red-600 hover:text-red-800" 
+                                            data-action="cart#removeItem"
+                                            data-item-id="{{ item.id }}">
+                                        {{ 'Supprimer'|trans }}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            {# Cart Summary #}
+            <div class="lg:col-span-1">
+                <div class="bg-white rounded-lg shadow p-6 sticky top-4">
+                    <h2 class="text-xl font-semibold mb-4">{{ 'Résumé de la commande'|trans }}</h2>
+                    <div class="space-y-2 mb-4">
+                        <div class="flex justify-between">
+                            <span>{{ 'Sous-total'|trans }}</span>
+                            <span data-cart-target="subtotal">{{ cart.total }} €</span>
+                        </div>
+                    </div>
+                    <button class="w-full bg-primary text-white py-2 rounded-lg hover:bg-primary-dark"
+                            data-action="cart#checkout">
+                        {{ 'Passer la commande'|trans }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="text-center py-12">
+            <p class="text-xl text-gray-600">{{ 'Votre panier est vide'|trans }}</p>
+            <a href="{{ path('browse') }}" class="text-primary hover:underline">
+                {{ 'Continuer vos achats'|trans }}
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %} 

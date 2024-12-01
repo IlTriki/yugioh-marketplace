@@ -1,0 +1,86 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'Confirmation de commande'|trans }}{% endblock %}
+
+{% block body %}
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold mb-8">{{ 'Confirmation de commande'|trans }}</h1>
+
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+            <h2 class="text-xl font-semibold mb-4">{{ 'Adresse de livraison'|trans }}</h2>
+            
+            {% if user.addresses|length > 0 %}
+                <div class="grid gap-4 mb-4">
+                    {% for address in user.addresses %}
+                        <div class="border rounded-lg p-4 {% if selectedAddress and selectedAddress.id == address.id %}border-primary bg-primary/5{% else %}border-gray-200{% endif %}">
+                            <label class="flex items-start space-x-3">
+                                <input type="radio" 
+                                       name="delivery_address" 
+                                       value="{{ address.id }}"
+                                       {% if selectedAddress and selectedAddress.id == address.id %}checked{% endif %}
+                                       class="mt-1">
+                                <div>
+                                    <p>{{ address.street }}</p>
+                                    <p>{{ address.postalCode }} {{ address.city }}</p>
+                                    <p>{{ address.country }}</p>
+                                </div>
+                            </label>
+                            <div class="mt-2 ml-7">
+                                <a href="{{ path('address_edit', {'id': address.id, 'redirect': 'checkout'}) }}" 
+                                   class="text-sm text-primary hover:underline">
+                                    {{ 'Modifier'|trans }}
+                                </a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <a href="{{ path('address_new', {'redirect': 'checkout'}) }}" 
+               class="inline-block text-primary hover:underline">
+                {{ 'Ajouter une nouvelle adresse'|trans }}
+            </a>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+            <h2 class="text-xl font-semibold mb-4">{{ 'Résumé de votre commande'|trans }}</h2>
+            
+            <div class="divide-y">
+                {% for item in cart.items %}
+                    <div class="py-4 flex justify-between items-center">
+                        <div class="flex items-center space-x-4">
+                            <img src="{{ item.product.images|first.url|default('https://via.placeholder.com/100') }}" 
+                                 alt="{{ item.product.name }}" 
+                                 class="w-16 h-16 object-contain">
+                            <div>
+                                <h3 class="font-medium">{{ item.product.name }}</h3>
+                                <p class="text-gray-600">{{ item.quantity }} x {{ item.priceAtAddition }} €</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="font-medium">{{ (item.quantity * item.priceAtAddition)|number_format(2) }} €</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="border-t mt-6 pt-6">
+                <div class="flex justify-between text-xl font-semibold">
+                    <span>{{ 'Total'|trans }}</span>
+                    <span>{{ cart.total }} €</span>
+                </div>
+            </div>
+        </div>
+
+        <form action="{{ path('order_confirm') }}" method="POST" class="text-center">
+            <input type="hidden" name="address_id" value="{{ selectedAddress ? selectedAddress.id : '' }}">
+            <button type="submit" 
+                    class="bg-primary text-white px-8 py-3 rounded-lg hover:bg-primary-dark transition-colors"
+                    {% if not selectedAddress %}disabled{% endif %}>
+                {{ 'Confirmer la commande'|trans }}
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %} 

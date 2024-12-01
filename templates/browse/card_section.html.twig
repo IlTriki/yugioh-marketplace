@@ -8,7 +8,7 @@
     <ul class="mt-8 grid gap-18 sm:grid-cols-2 lg:grid-cols-4">
         {% for card in cards %}
             <li class="max-sm:w-64 max-sm:mx-auto">
-                <a href="#" class="group block">
+                <a href="{{ path('product_detail', {id: card.id}) }}" class="group block">
                     <img
                         src="{{ card.images|first.url|default('https://via.placeholder.com/350x450') }}"
                         alt=""

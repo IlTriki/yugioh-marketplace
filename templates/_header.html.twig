@@ -60,7 +60,7 @@
 				</ul>
 			</div>
 			<div class="flex items-center gap-6 z-20">
-				<a class="text-textPrimary hover:text-primary cursor-pointer">
+				<a class="text-textPrimary hover:text-primary cursor-pointer" href="{{ path('cart_view') }}">
 					<svg fill="none" width="40px" height="40px" stroke="currentColor" viewbox="0 0 64 64" enable-background="new 0 0 64 64" id="Layer_1" version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 						<g>
 							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M28.462,49.718c-1.202,0-2.322-0.447-3.151-1.26c-1.051-1.028-1.5-2.594-1.172-4.087c0.311-1.416,1.245-2.498,2.563-2.968   c1.803-0.643,3.784-0.14,4.983,1.234c0.852,0.977,1.237,2.295,1.057,3.618C32.467,48.262,30.667,49.718,28.462,49.718z    M28.326,43.117c-0.314,0-0.635,0.057-0.952,0.17c-0.896,0.32-1.188,1.085-1.282,1.513c-0.181,0.825,0.056,1.679,0.617,2.229   c0.454,0.445,1.077,0.689,1.753,0.689c1.024,0,2.143-0.596,2.298-1.734c0.104-0.761-0.103-1.483-0.581-2.032   C29.715,43.421,29.04,43.117,28.326,43.117z"/>
@@ -73,6 +73,14 @@
 						</g>
 					</svg>
 				</a>
+				<div class="relative group">
+					<a class="text-textPrimary hover:text-primary cursor-pointer" href="{{ path('profile') }}">
+						<svg width="30px" height="30px" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+							<circle cx="12" cy="7" r="4" stroke-width="2"></circle>
+						</svg>
+					</a>
+				</div>
 				{% if is_granted('IS_AUTHENTICATED_FULLY') %}
 					<a href="{{ path('logout') }}" class="text-textPrimary hover:text-primary hidden md:block">Logout</a>
 				{% else %}

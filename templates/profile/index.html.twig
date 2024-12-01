@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'Mon profil'|trans }}{% endblock %}
+
+{% block body %}
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-4xl mx-auto">
+        {% for message in app.flashes('success') %}
+            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+                {{ message }}
+            </div>
+        {% endfor %}
+
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+            {# Profile Navigation #}
+            <div class="bg-gray-50 px-6 py-4 border-b">
+                <div class="flex space-x-4">
+                    <a href="{{ path('profile') }}" 
+                       class="px-3 py-2 rounded-md text-sm font-medium bg-primary text-white">
+                        {{ 'Profil'|trans }}
+                    </a>
+                    <a href="{{ path('profile_orders') }}" 
+                       class="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-primary">
+                        {{ 'Commandes'|trans }}
+                    </a>
+                    <a href="{{ path('profile_addresses') }}" 
+                       class="px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-primary">
+                        {{ 'Adresses'|trans }}
+                    </a>
+                </div>
+            </div>
+
+            {# Profile Content #}
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h1 class="text-2xl font-bold">{{ 'Informations personnelles'|trans }}</h1>
+                    <a href="{{ path('profile_edit') }}" 
+                       class="text-primary hover:text-primary-dark">
+                        {{ 'Modifier'|trans }}
+                    </a>
+                </div>
+
+                <div class="space-y-4">
+                    <div>
+                        <h3 class="text-sm font-medium text-gray-500">{{ 'Nom d\'utilisateur'|trans }}</h3>
+                        <p class="mt-1">{{ user.username }}</p>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-medium text-gray-500">{{ 'Email'|trans }}</h3>
+                        <p class="mt-1">{{ user.email }}</p>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-medium text-gray-500">{{ 'Nom'|trans }}</h3>
+                        <p class="mt-1">{{ user.firstName }} {{ user.lastName }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

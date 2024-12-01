@@ -2,6 +2,11 @@
 
 {% block title %}Admin Dashboard{% endblock %}
 
+{% block javascripts_head %}
+    {{ parent() }}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
 {% block body %}
     <div class="container mx-auto px-4 py-8" data-controller="admin-dashboard">
         <h1 class="text-3xl font-bold mb-8">Admin Dashboard</h1>
@@ -71,12 +76,4 @@
             </p>
         </div>
     </div>
-{% endblock %}
-
-{% block javascripts %}
-    {{ parent() }}
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script> 
-        console.log('TESTING');
-    </script>
 {% endblock %}

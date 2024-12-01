@@ -1,0 +1,74 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ product.name }}{% endblock %}
+
+{% block body %}
+<div class="container mx-auto px-4 py-8" 
+     data-controller="product-detail"
+     data-product-detail-topic-value="{{ topic }}"
+     data-product-detail-mercure-url-value="{{ mercure_url }}">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="product-images">
+            {% if product.images is not empty %}
+                <img src="{{ product.images|first.url }}" alt="{{ product.name }}" class="w-full h-auto">
+            {% else %}
+                <img src="https://via.placeholder.com/600x400" alt="No image available" class="w-full h-auto">
+            {% endif %}
+        </div>
+
+        <div class="product-info">
+            <h1 class="text-3xl font-bold mb-4">{{ product.name }}</h1>
+            <p class="text-2xl font-semibold mb-4">{{ product.price }} €</p>
+            
+            <div class="mb-4" data-product-detail-target="stockStatus">
+                {% if product.stock > 0 and product.status.value == productStatuses[0].value %}
+                    <span class="text-green-600">En stock ({{ product.stock }} disponible)</span>
+                {% elseif product.status.value == productStatuses[1].value %}
+                    <span class="text-red-600">En rupture de stock</span>
+                {% else %}
+                    <span class="text-yellow-600">Pré-commande ({{ product.stock }} disponible)</span>
+                {% endif %}
+            </div>
+            <button class="{% if product.stock <= 0 %}bg-gray-700{% else %}bg-primary hover:bg-primary-dark{% endif %} text-white px-6 py-2 rounded-lg mb-6"
+                    data-product-detail-target="addToCartButton"
+                    {% if product.stock <= 0 %}disabled{% endif %}>
+                {{ product.stock <= 0 ? 'Rupture de stock' : 'Ajouter au panier'|trans }}
+            </button>
+
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold mb-2">{{ 'Description'|trans }}</h2>
+                <p>{{ product.description }}</p>
+            </div>
+
+            {% if product.category and product.category.name == 'card' %}
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <h3 class="font-semibold">{{ 'Type'|trans }}</h3>
+                        <p>{{ product.type }}</p>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold">{{ 'Frame Type'|trans }}</h3>
+                        <p>{{ product.frameType }}</p>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold">ATK/DEF</h3>
+                        <p>{{ product.atk }}/{{ product.def }}</p>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold">{{ 'Level'|trans }}</h3>
+                        <p>{{ product.level }}</p>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold">{{ 'Race'|trans }}</h3>
+                        <p>{{ product.race }}</p>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold">{{ 'Attribute'|trans }}</h3>
+                        <p>{{ product.attribute }}</p>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
