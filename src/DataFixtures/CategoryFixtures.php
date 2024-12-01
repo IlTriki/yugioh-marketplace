@@ -9,7 +9,6 @@ class CategoryFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        // Define the categories
         $categories = ['card', 'booster', 'accessory'];
 
         foreach ($categories as $categoryName) {

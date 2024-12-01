@@ -14,6 +14,9 @@ class BrowseController extends AbstractController
     #[Route('/browse', name: 'browse')]
     public function index(ProductRepository $productRepository): Response
     {
+        if ($this->getUser() && in_array('ROLE_ADMIN', $this->getUser()->getRoles())) {
+            return $this->redirectToRoute('admin_home');
+        }
         $cards = $productRepository->getPaginatedProductsByCategoryWithLimitQuery("card", 8);
         $boosters = $productRepository->getPaginatedProductsByCategoryWithLimitQuery("booster", 8);
         $accessories = $productRepository->getPaginatedProductsByCategoryWithLimitQuery("accessory", 8);
@@ -23,6 +26,7 @@ class BrowseController extends AbstractController
             'cards' => $cards,
             'boosters' => $boosters,
             'accessories' => $accessories,
+            
         ]);
     }
 }

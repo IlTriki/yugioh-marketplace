@@ -10,7 +10,6 @@ class AddressFixtures extends Fixture implements DependentFixtureInterface
 {
     public function load(ObjectManager $manager): void
     {
-        // Sample data for addresses
         $addresses = [
             [
                 'street' => '123 Duelist Avenue',

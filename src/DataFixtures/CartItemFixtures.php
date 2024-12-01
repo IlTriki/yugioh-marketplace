@@ -10,7 +10,6 @@ class CartItemFixtures extends Fixture implements DependentFixtureInterface
 {
     public function load(ObjectManager $manager): void
     {
-        // Sample data for CartItems
         $cartItems = [
             [
                 'cart' => 'cart_0',

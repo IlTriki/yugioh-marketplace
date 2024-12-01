@@ -1,0 +1,82 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block body %}
+    <div class="container mx-auto px-4 py-8" data-controller="admin-dashboard">
+        <h1 class="text-3xl font-bold mb-8">Admin Dashboard</h1>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            {% for category, count in productStats %}
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <h3 class="text-lg font-semibold mb-2">{{ category|capitalize }}</h3>
+                    <p class="text-3xl font-bold">{{ count }}</p>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="bg-white p-6 rounded-lg shadow mb-8">
+            <h2 class="text-xl font-bold mb-4">Product Availability</h2>
+            <div class="grid grid-cols-3 gap-4">
+                <div>
+                    <h4 class="font-semibold">In Stock</h4>
+                    <p>{{ availabilityRatio['disponible'] ?? 0 }}%</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold">Out of Stock</h4>
+                    <p>{{ availabilityRatio['en rupture'] ?? 0 }}%</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold">Pre-order</h4>
+                    <p>{{ availabilityRatio['precommande'] ?? 0 }}%</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-lg shadow mb-8">
+            <h2 class="text-xl font-bold mb-4">Recent Orders</h2>
+            <div class="overflow-x-auto">
+                <table class="min-w-full">
+                    <thead>
+                        <tr>
+                            <th class="px-6 py-3 border-b">Order ID</th>
+                            <th class="px-6 py-3 border-b">Created At</th>
+                            <th class="px-6 py-3 border-b">Customer</th>
+                            <th class="px-6 py-3 border-b">Total Products</th>
+                            <th class="px-6 py-3 border-b">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in recentOrders %}
+                            <tr>
+                                <td class="px-6 py-4 border-b">#{{ order.reference }}</td>
+                                <td class="px-6 py-4 border-b">{{ order.createdAt|date('Y-m-d H:i:s') }}</td>
+                                <td class="px-6 py-4 border-b">{{ order.user.email }}</td>
+                                <td class="px-6 py-4 border-b">{{ order.orderItems|length }}</td>
+                                <td class="px-6 py-4 border-b">{{ order.status.value }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-lg shadow">
+            <h2 class="text-xl font-bold mb-4">Monthly Sales</h2>
+            <canvas id="monthlySalesChart"></canvas>
+        </div>
+        <div class="hidden">
+            <p id="rawData">
+                {{ monthlySales|json_encode|raw }}
+            </p>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script> 
+        console.log('TESTING');
+    </script>
+{% endblock %}

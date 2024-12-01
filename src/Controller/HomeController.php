@@ -14,6 +14,9 @@ class HomeController extends AbstractController
     #[Route('/', name: 'home')]
     public function index(): Response
     {
+        if ($this->getUser() && in_array('ROLE_ADMIN', $this->getUser()->getRoles())) {
+            return $this->redirectToRoute('admin_home');
+        }
         return $this->render('home/home.html.twig', [
             'mercure_url' => $this->mercurePublicUrl,
         ]);

@@ -1,0 +1,136 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Orders Management
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script>
+		function toggleDetails(reference) {
+			const detailsRow = document.getElementById(`details-${reference}`);
+			if (detailsRow.classList.contains('hidden')) {
+				detailsRow.classList.remove('hidden');
+			} else {
+				detailsRow.classList.add('hidden');
+			}
+		}
+	</script>
+{% endblock %}
+
+{% block body %}
+	<div class="container mx-auto px-4 py-8">
+		<div class="flex justify-between items-center mb-6">
+			<h1 class="text-3xl font-bold">Orders Management</h1>
+		</div>
+
+		<div class="bg-white shadow-md rounded-lg p-4 mb-6">
+			<form method="get" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+				<label class="block text-sm font-medium text-gray-700">Search
+					<input type="text" name="search" value="{{ filters.search }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm" placeholder="Order Reference or Email">
+				</label>
+
+				<label class="block text-sm font-medium text-gray-700">Status
+					<select name="status" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+						<option value="">All Status</option>
+						{% for status in ['En cours', 'Envoyé'] %}
+							<option value="{{ status }}" {% if filters.status == status %} selected {% endif %}>
+								{{ status }}
+							</option>
+						{% endfor %}
+					</select>
+				</label>
+
+				<label class="block text-sm font-medium text-gray-700">Date From
+					<input type="date" name="dateFrom" value="{{ filters.dateFrom }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+				</label>
+
+				<label class="block text-sm font-medium text-gray-700">Date To
+					<input type="date" name="dateTo" value="{{ filters.dateTo }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+				</label>
+
+				<div class="md:col-span-2 lg:col-span-4 flex justify-end">
+					<button type="submit" class="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark">
+						Apply Filters
+					</button>
+				</div>
+			</form>
+		</div>
+
+		<div class="bg-white shadow-md rounded-lg overflow-x-auto">
+			<table class="min-w-full">
+				<thead class="bg-gray-50">
+					<tr>
+						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+							<a href="{{ path('admin_orders', filters|merge({ 'sortField': 'o.reference', 'sortDirection': filters.sortField == 'o.reference' and filters.sortDirection == 'ASC' ? 'DESC' : 'ASC' })) }}">
+								Reference
+								{% if filters.sortField == 'o.reference' %}
+									{{ filters.sortDirection == 'ASC' ? '↑' : '↓' }}
+								{% endif %}
+							</a>
+						</th>
+						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
+						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+							<a href="{{ path('admin_orders', filters|merge({ 'sortField': 'o.createdAt', 'sortDirection': filters.sortField == 'o.createdAt' and filters.sortDirection == 'ASC' ? 'DESC' : 'ASC' })) }}">
+								Date
+								{% if filters.sortField == 'o.createdAt' %}
+									{{ filters.sortDirection == 'ASC' ? '↑' : '↓' }}
+								{% endif %}
+							</a>
+						</th>
+						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Items</th>
+						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
+						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Details</th>
+					</tr>
+				</thead>
+				<tbody class="bg-white divide-y divide-gray-200">
+					{% for order in pagination %}
+						<tr>
+							<td class="px-6 py-4 whitespace-nowrap">{{ order.reference }}</td>
+							<td class="px-6 py-4 whitespace-nowrap">{{ order.user.email }}</td>
+							<td class="px-6 py-4 whitespace-nowrap">{{ order.createdAt|date('Y-m-d H:i') }}</td>
+							<td class="px-6 py-4 whitespace-nowrap">{{ order.status.value }}</td>
+							<td class="px-6 py-4 whitespace-nowrap">{{ order.orderItems|length }}</td>
+							<td class="px-6 py-4 whitespace-nowrap">
+								{% set total = 0 %}
+								{% for item in order.orderItems %}
+									{% set total = total + (item.quantity * item.productPrice) %}
+								{% endfor %}
+								{{ total }}€
+							</td>
+							<td class="px-6 py-4 whitespace-nowrap">
+								<button onclick="toggleDetails('{{ order.reference }}')" class="text-blue-500">Details</button>
+							</td>
+						</tr>
+						<tr id="details-{{ order.reference }}" class="hidden">
+							<td colspan="7" class="px-0">
+								<table class="bg-white rounded-lg w-full">
+									<thead class="bg-gray-50">
+										<tr>
+											<th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product Name</th>
+											<th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity</th>
+											<th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
+										</tr>
+									</thead>
+									<tbody class="bg-white divide-y divide-gray-200">
+										{% for item in order.orderItems %}
+											<tr>
+												<td class="px-4 py-2 whitespace-nowrap">{{ item.product.name }}</td>
+												<td class="px-4 py-2 whitespace-nowrap">{{ item.quantity }}</td>
+												<td class="px-4 py-2 whitespace-nowrap">{{ item.productPrice }}€</td>
+											</tr>
+										{% endfor %}
+									</tbody>
+								</table>
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+
+		<div class="mt-4 mx-auto w-fit bg-primary">
+			{{ knp_pagination_render(pagination, '@KnpPaginator/Pagination/tailwindcss_pagination.html.twig') }}
+		</div>
+	</div>
+{% endblock %}

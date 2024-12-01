@@ -22,7 +22,7 @@ class UserFixtures extends Fixture
             ->setEmail('admin@example.com')
             ->setFirstName('Admin')
             ->setLastName('User')
-            ->setRole('ADMIN');
+            ->setRole('ROLE_ADMIN');
 
         $hashedPassword = $this->passwordHasher->hashPassword($admin, 'adminpassword');
         $admin->setPasswordHash($hashedPassword);
@@ -35,7 +35,7 @@ class UserFixtures extends Fixture
                 ->setEmail("user$i@example.com")
                 ->setFirstName('Name' . $i)
                 ->setLastName('Surname' . $i)
-                ->setRole('USER');
+                ->setRole('ROLE_USER');
 
             $hashedPassword = $this->passwordHasher->hashPassword($user, 'password' . $i);
             $user->setPasswordHash($hashedPassword);

@@ -17,8 +17,12 @@ class CardsController extends AbstractController
     #[Route('/cards', name: 'cards')]
     public function index(ProductRepository $productRepository,
     PaginatorInterface $paginator,
-    Request $request): Response
+    Request $request,
+    ): Response
     {
+        if ($this->getUser() && in_array('ROLE_ADMIN', $this->getUser()->getRoles())) {
+            return $this->redirectToRoute('admin_home');
+        }
         $queryBuilder = $productRepository->getPaginatedProductsByCategoryQuery("card");
         $cards = $paginator->paginate(
             $queryBuilder,
@@ -26,10 +30,12 @@ class CardsController extends AbstractController
             20
         );
 
-        return $this->render('cards/cards.html.twig', [
+        return $this->render('cards/cards.html.twig',
+        [
             'mercure_url' => $this->mercurePublicUrl,
-            'cards' => $cards,
-            'unfiltered_cards' => $cards
+            'products' => $cards,
+            'searchPath' => 'cards_search',
+            'errorMessage' => "Aucune carte trouvée",
         ]);
     }
 
@@ -37,20 +43,38 @@ class CardsController extends AbstractController
     public function search(
         ProductRepository $productRepository,
         PaginatorInterface $paginator,
-        Request $request
+        Request $request,
+        
     ): Response {
-        $searchTerm = $request->query->get('name', null);
-        $queryBuilder = $productRepository->getPaginatedProductsByCategoryAndNameQuery("card", $searchTerm);
+        if ($this->getUser() && in_array('ROLE_ADMIN', $this->getUser()->getRoles())) {
+            return $this->redirectToRoute('admin_home');
+        }
+        $filters = [
+            'name' => $request->query->get('name'),
+            'inStock' => $request->query->getBoolean('inStock'),
+            'preOrder' => $request->query->getBoolean('preOrder'),
+            'outOfStock' => $request->query->getBoolean('outOfStock'),
+            'priceFrom' => $request->query->get('priceFrom'),
+            'priceTo' => $request->query->get('priceTo'),
+            'sortBy' => $request->query->get('sortBy'),
+        ];
+
+        $queryBuilder = $productRepository->getFilteredProductsQuery("card", $filters);
+        
         $cards = $paginator->paginate(
             $queryBuilder,
             $request->query->getInt('page', 1),
             20
         );
 
-        return $this->render('cards/cards.html.twig', [
-            'mercure_url' => $this->mercurePublicUrl,
-            'cards' => $cards,
-            'searchTerm' => $searchTerm,
-        ]);
+        return $this->render('cards/cards.html.twig',
+            [
+                'mercure_url' => $this->mercurePublicUrl,
+                'products' => $cards,
+                'searchTerm' => $filters['name'],
+                'filters' => $filters,
+                'searchPath' => 'cards_search',
+                'errorMessage' => "Aucune carte trouvée",
+            ]);
     }
 }

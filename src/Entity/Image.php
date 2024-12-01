@@ -16,7 +16,7 @@ class Image
     private string $url;
 
     #[ORM\ManyToOne(targetEntity: Product::class, inversedBy: 'images')]
-    private Product $product;
+    private ?Product $product;
 
     public function getId(): int
     {
@@ -39,10 +39,14 @@ class Image
         return $this->product;
     }
 
-    public function setProduct(Product $product): self
+    public function setProduct(?Product $product): self
     {
         $this->product = $product;
         return $this;
     }
 
+    public function __toString(): string
+    {
+        return $this->url;
+    }
 }

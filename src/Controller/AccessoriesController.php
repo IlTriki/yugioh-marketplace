@@ -17,18 +17,64 @@ class AccessoriesController extends AbstractController
     #[Route('/accessories', name: 'accessories')]
     public function index(ProductRepository $productRepository,
     PaginatorInterface $paginator,
-    Request $request): Response
+    Request $request,
+    ): Response
     {
+        if ($this->getUser() && in_array('ROLE_ADMIN', $this->getUser()->getRoles())) {
+            return $this->redirectToRoute('admin_home');
+        }
         $queryBuilder = $productRepository->getPaginatedProductsByCategoryQuery("accessory");
         $accessories = $paginator->paginate(
             $queryBuilder,
             $request->query->getInt('page', 1),
             20
         );
+        
+        return $this->render('accessories/accessories.html.twig',
+        [
+                'mercure_url' => $this->mercurePublicUrl,
+                'products' => $accessories,
+                'searchPath' => 'accessories_search',
+                'errorMessage' => "Aucun accessoire trouvé",
+            ]);
+    }
 
-        return $this->render('accessories/accessories.html.twig', [
-            'mercure_url' => $this->mercurePublicUrl,
-            'accessories' => $accessories,
-        ]);
+    #[Route('/accessories/search', name: 'accessories_search')]
+    public function search(
+        ProductRepository $productRepository,
+        PaginatorInterface $paginator,
+        Request $request,
+        
+    ): Response {
+        if ($this->getUser() && in_array('ROLE_ADMIN', $this->getUser()->getRoles())) {
+            return $this->redirectToRoute('admin_home');
+        }
+        $filters = [
+            'name' => $request->query->get('name'),
+            'inStock' => $request->query->getBoolean('inStock'),
+            'preOrder' => $request->query->getBoolean('preOrder'),
+            'outOfStock' => $request->query->getBoolean('outOfStock'),
+            'priceFrom' => $request->query->get('priceFrom'),
+            'priceTo' => $request->query->get('priceTo'),
+            'sortBy' => $request->query->get('sortBy'),
+        ];
+
+        $queryBuilder = $productRepository->getFilteredProductsQuery("accessory", $filters);
+        
+        $accessories = $paginator->paginate(
+            $queryBuilder,
+            $request->query->getInt('page', 1),
+            20
+        );
+
+        return $this->render('accessories/accessories.html.twig',
+        [
+                'mercure_url' => $this->mercurePublicUrl,
+                'products' => $accessories,
+                'searchTerm' => $filters['name'],
+                'filters' => $filters,
+                'searchPath' => 'accessories_search',
+                'errorMessage' => "Aucun accessoire trouvé",
+            ]);
     }
 }

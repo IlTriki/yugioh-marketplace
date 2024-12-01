@@ -16,28 +16,26 @@ class UserRepository extends ServiceEntityRepository
         parent::__construct($registry, User::class);
     }
 
-    //    /**
-    //     * @return User[] Returns an array of User objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('c')
-    //            ->andWhere('c.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('c.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    public function getFilteredPaginatedUsersQuery(array $filters = [])
+    {
+        $qb = $this->createQueryBuilder('u')
+            ->leftJoin('u.orders', 'o')
+            ->addSelect('o');
 
-    //    public function findOneBySomeField($value): ?User
-    //    {
-    //        return $this->createQueryBuilder('c')
-    //            ->andWhere('c.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+        if (!empty($filters['search'])) {
+            $qb->andWhere('u.email LIKE :search OR u.username LIKE :search')
+               ->setParameter('search', '%' . $filters['search'] . '%');
+        }
+
+        if (!empty($filters['role'])) {
+            $qb->andWhere('u.role = :role')
+               ->setParameter('role', $filters['role']);
+        }
+
+        $sortField = $filters['sortField'] ?? 'u.email';
+        $sortDirection = $filters['sortDirection'] ?? 'ASC';
+        $qb->orderBy($sortField, $sortDirection);
+
+        return $qb->getQuery();
+    }
 }

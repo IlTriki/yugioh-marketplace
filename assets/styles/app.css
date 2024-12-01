@@ -5,30 +5,3 @@
 body {
     font-family: 'Poppins', sans-serif;
 }
-/* 
-.pagination {
-    display: flex;
-    gap: 0.25rem;
-    justify-content: center;
-    font-size: 0.75rem;
-    line-height: 1rem;
-    font-weight: 500;
-}
-
-.pagination .item {
-    display: block;
-    border-radius: 0.25rem; 
-    border-width: 1px;
-    border-color: rgb(243 244 246);
-    line-height: 2rem;
-    background-color: white;
-    text-align: center;
-    color: rgb(17 24 39);
-}
-
-.pagination .active {
-    background-color: blue;
-    border-color: blue;
-    color: white;
-} */
-

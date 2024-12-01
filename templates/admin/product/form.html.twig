@@ -1,0 +1,160 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {% if product is defined and product.id %}Edit Product{% else %}New Product{% endif %}
+{% endblock %}
+
+{% block body %}
+    <div class="container mx-auto px-4 py-8">
+        <div class="max-w-2xl mx-auto">
+            <h1 class="text-3xl font-bold mb-6">{{ product is defined and product.id ? 'Edit Product' : 'New Product' }}</h1>
+
+            {{ form_start(form, {'attr': {'class': 'space-y-6', 'id': 'productForm'}}) }}
+                <div>
+                    {{ form_label(form.name, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+                    {{ form_widget(form.name, {'attr': {'class': 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm'}}) }}
+                    {{ form_errors(form.name) }}
+                </div>
+
+                <div>
+                    {{ form_label(form.price, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+                    {{ form_widget(form.price, {'attr': {'class': 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm'}}) }}
+                    {{ form_errors(form.price) }}
+                </div>
+
+                <div>
+                    {{ form_label(form.description, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+                    {{ form_widget(form.description, {'attr': {'class': 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm'}}) }}
+                    {{ form_errors(form.description) }}
+                </div>
+
+                <div>
+                    {{ form_label(form.stock, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+                    {{ form_widget(form.stock, {'attr': {'class': 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm'}}) }}
+                    {{ form_errors(form.stock) }}
+                </div>
+
+                <div>
+                    {{ form_label(form.category, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+                    {{ form_widget(form.category, {'attr': {'class': 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm'}}) }}
+                    {{ form_errors(form.category) }}
+                </div>
+
+                <div id="conditionalFields" class="space-y-6">
+                    <div>
+                        {{ form_label(form.type, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+                        {{ form_widget(form.type, {'attr': {'class': 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm'}}) }}
+                        {{ form_errors(form.type) }}
+                    </div>
+
+                    <div>
+                        {{ form_label(form.frameType, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+                        {{ form_widget(form.frameType, {'attr': {'class': 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm'}}) }}
+                        {{ form_errors(form.frameType) }}
+                    </div>
+
+                    <div>
+                        {{ form_label(form.atk, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+                        {{ form_widget(form.atk, {'attr': {'class': 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm'}}) }}
+                        {{ form_errors(form.atk) }}
+                    </div>
+
+                    <div>
+                        {{ form_label(form.def, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+                        {{ form_widget(form.def, {'attr': {'class': 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm'}}) }}
+                        {{ form_errors(form.def) }}
+                    </div>
+
+                    <div>
+                        {{ form_label(form.level, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+                        {{ form_widget(form.level, {'attr': {'class': 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm'}}) }}
+                        {{ form_errors(form.level) }}
+                    </div>
+
+                    <div>
+                        {{ form_label(form.race, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+                        {{ form_widget(form.race, {'attr': {'class': 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm'}}) }}
+                        {{ form_errors(form.race) }}
+                    </div>
+
+                    <div>
+                        {{ form_label(form.attribute, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+                        {{ form_widget(form.attribute, {'attr': {'class': 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm'}}) }}
+                        {{ form_errors(form.attribute) }}
+                    </div>
+                </div>
+
+                <div>
+                    {{ form_label(form.images, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+                    <div id="imageFields">
+                        {% for image in form.images %}
+                            <div class="flex items-center space-x-2 mb-2">
+                                {{ form_widget(image, {'attr': {'class': 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm'}}) }}
+                                <button type="button" class="remove-image btn btn-danger">Remove</button>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <button type="button" id="add-image" class="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark">Add Image</button>
+                </div>
+
+                <div>
+                    {{ form_label(form.status, null, {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+                    {{ form_widget(form.status, {'attr': {'class': 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm'}}) }}
+                    {{ form_errors(form.status) }}
+                </div>
+
+                <div class="flex justify-end space-x-4">
+                    <a href="{{ path('admin_products') }}" class="bg-gray-200 text-gray-700 px-4 py-2 rounded hover:bg-gray-300">
+                        Cancel
+                    </a>
+                    <button type="submit" class="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark">
+                        {{ product is defined and product.id ? 'Update' : 'Create' }}
+                    </button>
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        if (!product_category)  {
+            let product_category = document.getElementById('product_category');
+        }
+        if (!conditionalFields) {
+            let conditionalFields = document.getElementById('conditionalFields');
+        }
+        if (product_category.value == 1) {
+            conditionalFields.classList.remove('hidden');
+        } else {
+            console.log(product_category.value);
+            conditionalFields.classList.add('hidden');
+        }
+
+        product_category.addEventListener('change', function() {
+            if (this.value == 1) {
+                conditionalFields.classList.remove('hidden');
+            } else {
+                console.log(this.text);
+                conditionalFields.classList.add('hidden');
+            }
+        });
+
+        document.getElementById('add-image').addEventListener('click', function() {
+            const imageFields = document.getElementById('imageFields');
+            const newField = document.createElement('div');
+            newField.classList.add('flex', 'items-center', 'space-x-2', 'mb-2');
+            newField.innerHTML = `
+                <input type="text" name="product[images][]" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm" placeholder="Image URL" required>
+                <button type="button" class="remove-image btn btn-danger">Remove</button>
+            `;
+            imageFields.appendChild(newField);
+        });
+
+        document.getElementById('imageFields').addEventListener('click', function(e) {
+            if (e.target.classList.contains('remove-image')) {
+                e.target.parentElement.remove();
+            }
+        });
+    </script>
+{% endblock %}

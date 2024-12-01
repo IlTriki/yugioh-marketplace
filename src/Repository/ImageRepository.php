@@ -16,6 +16,12 @@ class ImageRepository extends ServiceEntityRepository
         parent::__construct($registry, Image::class);
     }
 
+    public function remove(Image $image): void
+    {
+        $this->getEntityManager()->remove($image);
+        // $this->getEntityManager()->flush();
+    }
+
     //    /**
     //     * @return Image[] Returns an array of Image objects
     //     */

@@ -36,13 +36,12 @@ class RegistrationController extends AbstractController
 
             $lastName = $form->get('lastName')->getData();
 
-            $user->setLastName($last);
+            $user->setLastName($lastName);
 
-            $lastName = $form->get('firstName')->getData();
+            $firstName = $form->get('firstName')->getData();
 
-            $user->setLastName($last);
+            $user->setFirstName($firstName);
 
-            // encode the plain password
             $user->setPasswordHash($userPasswordHasher->hashPassword($user, $plainPassword));
 
             $user->setRole('USER');

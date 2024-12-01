@@ -50,7 +50,7 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     {
         $this->orders = new ArrayCollection();
         $this->addresses = new ArrayCollection();
-        $this->carts = new ArrayCollection();
+        $this->cart = new ArrayCollection();
     }
 
     public function getId(): int
@@ -183,13 +183,13 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
 
     public function getCarts(): Collection
     {
-        return $this->carts;
+        return $this->cart;
     }
 
     public function addCart(Cart $cart)
     {
-        if (!$this->carts->contains($cart)) {
-            $this->carts[] = $cart;
+        if (!$this->cart->contains($cart)) {
+            $this->cart[] = $cart;
             $cart->setUser($this);
         }
 
@@ -198,7 +198,7 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
 
     public function removeCart(Cart $cart)
     {
-        if ($this->carts->removeElement($cart)) {
+        if ($this->cart->removeElement($cart)) {
             if ($cart->getUser() === $this) {
                 $cart->setUser(null);
             }
