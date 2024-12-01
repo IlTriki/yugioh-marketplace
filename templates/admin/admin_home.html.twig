@@ -14,7 +14,7 @@
 
 {% block body %}
     <div class="container mx-auto px-4 py-8" data-controller="admin-dashboard">
-        <h1 class="text-3xl font-bold mb-8">Admin Dashboard</h1>
+        <h1 class="text-3xl font-bold mb-8">{{ 'Tableau de bord'|trans }}</h1>
         
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             {% for category, count in productStats %}
@@ -26,34 +26,34 @@
         </div>
 
         <div class="bg-white p-6 rounded-lg shadow mb-8">
-            <h2 class="text-xl font-bold mb-4">Product Availability</h2>
+            <h2 class="text-xl font-bold mb-4">{{ 'Disponibilité des produits'|trans }}</h2>
             <div class="grid grid-cols-3 gap-4">
                 <div>
-                    <h4 class="font-semibold">In Stock</h4>
+                    <h4 class="font-semibold">{{ 'Disponible'|trans }}</h4>
                     <p>{{ availabilityRatio['disponible'] ?? 0 }}%</p>
                 </div>
                 <div>
-                    <h4 class="font-semibold">Out of Stock</h4>
+                    <h4 class="font-semibold">{{ 'En rupture'|trans }}</h4>
                     <p>{{ availabilityRatio['en rupture'] ?? 0 }}%</p>
                 </div>
                 <div>
-                    <h4 class="font-semibold">Pre-order</h4>
+                    <h4 class="font-semibold">{{ 'En précommande'|trans }}</h4>
                     <p>{{ availabilityRatio['en précommande'] ?? 0 }}%</p>
                 </div>
             </div>
         </div>
 
         <div class="bg-white p-6 rounded-lg shadow mb-8">
-            <h2 class="text-xl font-bold mb-4">Recent Orders</h2>
+            <h2 class="text-xl font-bold mb-4">{{ 'Commandes récentes'|trans }}</h2>
             <div class="overflow-x-auto">
                 <table class="min-w-full">
                     <thead>
                         <tr>
-                            <th class="px-6 py-3 border-b">Order ID</th>
-                            <th class="px-6 py-3 border-b">Created At</th>
-                            <th class="px-6 py-3 border-b">Customer</th>
-                            <th class="px-6 py-3 border-b">Total Products</th>
-                            <th class="px-6 py-3 border-b">Status</th>
+                            <th class="px-6 py-3 border-b">{{ 'ID Commande'|trans }}</th>
+                            <th class="px-6 py-3 border-b">{{ 'Créée le'|trans }}</th>
+                            <th class="px-6 py-3 border-b">{{ 'Client'|trans }}</th>
+                            <th class="px-6 py-3 border-b">{{ 'Total produits'|trans }}</th>
+                            <th class="px-6 py-3 border-b">{{ 'Statut'|trans }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -72,7 +72,7 @@
         </div>
 
         <div class="bg-white p-6 rounded-lg shadow">
-            <h2 class="text-xl font-bold mb-4">Monthly Sales</h2>
+            <h2 class="text-xl font-bold mb-4">{{ 'Ventes mensuelles'|trans }}</h2>
             <canvas id="monthlySalesChart"></canvas>
         </div>
         <div class="hidden">

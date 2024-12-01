@@ -1,7 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Products Management
-{% endblock %}
+{% block title %}{{ 'Gestion des produits'|trans }}{% endblock %}
 
 {% block body %}
 	<div class="container mx-auto px-4 py-8">
@@ -26,13 +25,14 @@
 
 		<div class="bg-white shadow-md rounded-lg p-4 mb-6">
 			<form method="get" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
-				<label class="block text-sm font-medium text-gray-700">Search
+				<label class="block text-sm font-medium text-gray-700">
+					{{ 'Rechercher'|trans }}
 					<input type="text" name="name" value="{{ filters.name }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
 				</label>
 
 				<label class="block text-sm font-medium text-gray-700">Category
 					<select name="category" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
-						<option value="">All Categories</option>
+						<option value="">{{ 'Toutes les catégories'|trans }}</option>
 						{% for category in categories %}
 							<option value="{{ category.name }}" {% if filters.category == category.name %} selected {% endif %}>
 								{{ category.name }}
@@ -43,7 +43,7 @@
 
 				<label class="block text-sm font-medium text-gray-700">Status
 					<select name="status" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
-						<option value="">All Status</option>
+						<option value="">{{ 'Tous les statuts'|trans }}</option>
 						{% for status in productStatuses %}
 							<option value="{{ status.value }}" {% if filters.status == status.value %} selected {% endif %}>
 								{{ status.value }}
@@ -61,7 +61,7 @@
 
 				<div class="md:col-span-3 lg:col-span-4 flex justify-end">
 					<button type="submit" class="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark">
-						Apply Filters
+						{{ 'Appliquer les filtres'|trans }}
 					</button>
 				</div>
 			</form>
@@ -73,7 +73,7 @@
 					<tr>
 						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
 							<a href="{{ path('admin_products', filters|merge({ 'sortField': 'p.name', 'sortDirection': filters.sortField == 'p.name' and filters.sortDirection == 'ASC' ? 'DESC' : 'ASC' })) }}">
-								Name
+								{{ 'Nom'|trans }}
 								{% if filters.sortField == 'p.name' %}
 									{{ filters.sortDirection == 'ASC' ? '↑' : '↓' }}
 								{% endif %}
@@ -81,15 +81,21 @@
 						</th>
 						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
 							<a href="{{ path('admin_products', filters|merge({ 'sortField': 'p.price', 'sortDirection': filters.sortField == 'p.price' and filters.sortDirection == 'ASC' ? 'DESC' : 'ASC' })) }}">
-								Price
+								{{ 'Prix'|trans }}
 								{% if filters.sortField == 'p.price' %}
 									{{ filters.sortDirection == 'ASC' ? '↑' : '↓' }}
 								{% endif %}
 							</a>
 						</th>
-						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock</th>
-						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+							{{ 'Stock'|trans }}
+						</th>
+						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+							{{ 'Statut'|trans }}
+						</th>
+						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+							{{ 'Actions'|trans }}
+						</th>
 					</tr>
 				</thead>
 				<tbody class="bg-white divide-y divide-gray-200">
@@ -100,10 +106,14 @@
 							<td class="px-6 py-4 whitespace-nowrap">{{ product.stock }}</td>
 							<td class="px-6 py-4 whitespace-nowrap">{{ product.status.value }}</td>
 							<td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-								<a href="{{ path('admin_product_edit', {'id': product.id}) }}" class="text-indigo-600 hover:text-indigo-900 mr-4">Edit</a>
-								<form method="post" action="{{ path('admin_product_delete', {'id': product.id}) }}" class="inline" onsubmit="return confirm('Are you sure you want to delete this product?');">
+								<a href="{{ path('admin_product_edit', {'id': product.id}) }}" class="text-indigo-600 hover:text-indigo-900 mr-4">
+									{{ 'Editer'|trans }}
+								</a>
+								<form method="post" action="{{ path('admin_product_delete', {'id': product.id}) }}" class="inline" onsubmit="return confirm('{{ 'Voulez-vous vraiment supprimer ce produit ?'|trans }}');">
 									<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ product.id) }}">
-									<button type="submit" class="text-red-600 hover:text-red-900">Delete</button>
+									<button type="submit" class="text-red-600 hover:text-red-900">
+										{{ 'Supprimer'|trans }}
+									</button>
 								</form>
 							</td>
 						</tr>

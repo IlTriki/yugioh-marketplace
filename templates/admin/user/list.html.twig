@@ -1,32 +1,31 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Users Management
-{% endblock %}
+{% block title %}{{ 'Gestion des utilisateurs'|trans }}{% endblock %}
 
 {% block body %}
 	<div class="container mx-auto px-4 py-8">
 		<div class="flex justify-between items-center mb-6">
-			<h1 class="text-3xl font-bold">Users Management</h1>
+			<h1 class="text-3xl font-bold">{{ 'Gestion des utilisateurs'|trans }}</h1>
 		</div>
 
 		<div class="bg-white shadow-md rounded-lg p-4 mb-6">
 			<form method="get" class="grid grid-cols-1 md:grid-cols-3 gap-4">
 				<label class="block text-sm font-medium text-gray-700">
-					Search
+					{{ 'Rechercher'|trans }}
 					<input type="text" name="search" value="{{ filters.search }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm" placeholder="Email or Username">
 				</label>
 
 				<label class="block text-sm font-medium text-gray-700">Role
 					<select name="role" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
-						<option value="">All Roles</option>
-						<option value="ROLE_USER" {% if filters.role == 'ROLE_USER' %} selected {% endif %}>User</option>
-						<option value="ROLE_ADMIN" {% if filters.role == 'ROLE_ADMIN' %} selected {% endif %}>Admin</option>
+						<option value="">{{ 'Tous les rôles'|trans }}</option>
+						<option value="ROLE_USER" {% if filters.role == 'ROLE_USER' %} selected {% endif %}>{{ 'Utilisateur'|trans }}</option>
+						<option value="ROLE_ADMIN" {% if filters.role == 'ROLE_ADMIN' %} selected {% endif %}>{{ 'Administrateur'|trans }}</option>
 					</select>
 				</label>
 
 				<div class="flex items-end">
 					<button type="submit" class="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark">
-						Apply Filters
+						{{ 'Appliquer les filtres'|trans }}
 					</button>
 				</div>
 			</form>
@@ -38,15 +37,21 @@
 					<tr>
 						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
 							<a href="{{ path('admin_users', filters|merge({ 'sortField': 'u.email', 'sortDirection': filters.sortField == 'u.email' and filters.sortDirection == 'ASC' ? 'DESC' : 'ASC' })) }}">
-								Email
+								{{ 'Email'|trans }}
 								{% if filters.sortField == 'u.email' %}
 									{{ filters.sortDirection == 'ASC' ? '↑' : '↓' }}
 								{% endif %}
 							</a>
 						</th>
-						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Username</th>
-						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
-						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Orders</th>
+						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+							{{ 'Nom d\'utilisateur'|trans }}
+						</th>
+						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+							{{ 'Rôle'|trans }}
+						</th>
+						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+							{{ 'Commandes'|trans }}
+						</th>
 					</tr>
 				</thead>
 				<tbody class="bg-white divide-y divide-gray-200">

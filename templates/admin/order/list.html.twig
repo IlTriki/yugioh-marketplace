@@ -1,7 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Orders Management
-{% endblock %}
+{% block title %}{{ 'Gestion des commandes'|trans }}{% endblock %}
 
 {% block javascripts %}
 	{{ parent() }}
@@ -20,18 +19,20 @@
 {% block body %}
 	<div class="container mx-auto px-4 py-8" data-controller="order-status">
 		<div class="flex justify-between items-center mb-6">
-			<h1 class="text-3xl font-bold">Orders Management</h1>
+			<h1 class="text-3xl font-bold">{{ 'Gestion des commandes'|trans }}</h1>
 		</div>
 
 		<div class="bg-white shadow-md rounded-lg p-4 mb-6">
 			<form method="get" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-				<label class="block text-sm font-medium text-gray-700">Search
-					<input type="text" name="search" value="{{ filters.search }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm" placeholder="Order Reference or Email">
+				<label class="block text-sm font-medium text-gray-700">
+					{{ 'Rechercher'|trans }}
+					<input type="text" name="search" value="{{ filters.search }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm" placeholder="{{ 'Référence de commande ou email'|trans }}">
 				</label>
 
-				<label class="block text-sm font-medium text-gray-700">Status
+				<label class="block text-sm font-medium text-gray-700">
+					{{ 'Statut'|trans }}
 					<select name="status" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
-						<option value="">All Status</option>
+						<option value="">{{ 'Tous les statuts'|trans }}</option>
 						{% for status in ['En cours', 'Envoyé'] %}
 							<option value="{{ status }}" {% if filters.status == status %} selected {% endif %}>
 								{{ status }}
@@ -40,17 +41,19 @@
 					</select>
 				</label>
 
-				<label class="block text-sm font-medium text-gray-700">Date From
+				<label class="block text-sm font-medium text-gray-700">
+					{{ 'Date de'|trans }}
 					<input type="date" name="dateFrom" value="{{ filters.dateFrom }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
 				</label>
 
-				<label class="block text-sm font-medium text-gray-700">Date To
+				<label class="block text-sm font-medium text-gray-700">
+					{{ 'Date à'|trans }}
 					<input type="date" name="dateTo" value="{{ filters.dateTo }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
 				</label>
 
 				<div class="md:col-span-2 lg:col-span-4 flex justify-end">
 					<button type="submit" class="bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark">
-						Apply Filters
+						{{ 'Appliquer les filtres'|trans }}
 					</button>
 				</div>
 			</form>
@@ -62,25 +65,35 @@
 					<tr>
 						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
 							<a href="{{ path('admin_orders', filters|merge({ 'sortField': 'o.reference', 'sortDirection': filters.sortField == 'o.reference' and filters.sortDirection == 'ASC' ? 'DESC' : 'ASC' })) }}">
-								Reference
+								{{ 'Référence'|trans }}
 								{% if filters.sortField == 'o.reference' %}
 									{{ filters.sortDirection == 'ASC' ? '↑' : '↓' }}
 								{% endif %}
 							</a>
 						</th>
-						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
+						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+							{{ 'Client'|trans }}
+						</th>
 						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
 							<a href="{{ path('admin_orders', filters|merge({ 'sortField': 'o.createdAt', 'sortDirection': filters.sortField == 'o.createdAt' and filters.sortDirection == 'ASC' ? 'DESC' : 'ASC' })) }}">
-								Date
+								{{ 'Date'|trans }}
 								{% if filters.sortField == 'o.createdAt' %}
 									{{ filters.sortDirection == 'ASC' ? '↑' : '↓' }}
 								{% endif %}
 							</a>
 						</th>
-						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Items</th>
-						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
-						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Details</th>
+						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+							{{ 'Statut'|trans }}
+						</th>
+						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+							{{ 'Items'|trans }}
+						</th>
+						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+							{{ 'Total'|trans }}
+						</th>
+						<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+							{{ 'Détails'|trans }}
+						</th>
 					</tr>
 				</thead>
 				<tbody class="bg-white divide-y divide-gray-200">
@@ -109,7 +122,9 @@
 								{{ total }}€
 							</td>
 							<td class="px-6 py-4 whitespace-nowrap">
-								<button onclick="toggleDetails('{{ order.reference }}')" class="text-blue-500">Details</button>
+								<button onclick="toggleDetails('{{ order.reference }}')" class="text-blue-500">
+									{{ 'Détails'|trans }}
+								</button>
 							</td>
 						</tr>
 						<tr id="details-{{ order.reference }}" class="hidden">
@@ -117,9 +132,15 @@
 								<table class="bg-white rounded-lg w-full">
 									<thead class="bg-gray-50">
 										<tr>
-											<th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product Name</th>
-											<th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity</th>
-											<th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
+											<th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+												{{ 'Nom du produit'|trans }}
+											</th>
+											<th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+												{{ 'Quantité'|trans }}
+											</th>
+											<th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+												{{ 'Prix'|trans }}
+											</th>
 										</tr>
 									</thead>
 									<tbody class="bg-white divide-y divide-gray-200">
